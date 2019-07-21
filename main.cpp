@@ -42,6 +42,40 @@ glm::vec3 color(const Ray &r, Hitable *world, int depth) {
 	}
 }
 
+Hitable* randomScene() {
+	using namespace glm;
+	using namespace mathStuff;
+	int n = 500;
+	Hitable** list = new Hitable* [n + 1];
+	list[0] = new Sphere(vec3(0, -1000, 0), 1000, new Lambertian(vec3(.5, .5, .5)));
+	int i = 1;
+	for (int a = -11; a < 11; a++) {
+		for (int b = -11; b < 11; b++) {
+			float chooseMaterial = getRand();
+			vec3 center(a + .9f * getRand(), .2f, b + .9f * getRand());
+			if (length((center - vec3(4, .2, 0))) > .9f) {
+				if (chooseMaterial < .8) {
+					list[i++] = new Sphere(center, 0.2, new Lambertian(vec3(getRand() * getRand(), getRand() * getRand(), getRand() * getRand())));
+				}
+				else if (chooseMaterial < .95) {
+					list[i++] = new Sphere(center, 0.2, new Metal(vec3(.5f * (1 + getRand()), .5f * (1 + getRand()), .5f * (1 + getRand())), .5f * getRand()));
+				}
+				else {
+					list[i++] = new Sphere(center, .2, new Dielectric(1.5));
+				}
+			}
+		}
+	}
+	list[i++] = new Sphere(vec3(0, 1, 0), 1.0f, new Dielectric(1.5));
+	list[i++] = new Sphere(vec3(-4, 1, 0), 1.0f, new Lambertian(vec3(.4, .2, .1)));
+	list[i++] = new Sphere(vec3(4, 1, 0), 1.0f, new Metal(vec3(.7, .6, .5), 0));
+
+	return new HitableList(list, i);
+}
+
+
+
+
 
 int main() { 
 
@@ -60,7 +94,7 @@ int main() {
 	file << nx << " x " << ny << "_pixelAverage_" << ns << "_reflects_"<< MAX_REFLECTS << ".ppm";
 	renderedImage.open(file.str());
 	renderedImage << "P3\n" << nx << " " << ny << "\n255\n";
-
+/*
 	const int MAX_OBJECTS = 5;
 	Hitable* list[MAX_OBJECTS];
 	list[0] = new Sphere(glm::vec3(0, 0, -1), 0.5, new Lambertian(glm::vec3(0.1, 0.2, 0.5)));
@@ -69,8 +103,10 @@ int main() {
 	list[3] = new Sphere(glm::vec3(-1, 0, -1), 0.5, new Dielectric(1.5));
 	list[4] = new Sphere(glm::vec3(-1, 0, -1), -0.45, new Dielectric(1.5));
 	Hitable* world = new HitableList(list, MAX_OBJECTS);
-	
+	*/
 
+
+	Hitable* world = randomScene();
 	auto start = std::chrono::high_resolution_clock::now();
 
 	for (int j = ny - 1; j >= 0; j--) {
