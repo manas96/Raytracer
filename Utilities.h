@@ -38,4 +38,7 @@ namespace mathStuff {
 	// fast computation for fresnel reflection
 	float schick(float cosine, float refIdx);
 	
+	// returns a random point in a unit disk
+	glm::vec3 randomInUnitDisk();
+
 }

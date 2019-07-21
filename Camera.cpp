@@ -1,7 +1,7 @@
 #include "Camera.h"
 
-Camera::Camera(glm::vec3 lookFrom, glm::vec3 lookAt, glm::vec3 vUp, float  verticalFov, float aspectRatio) {
-	glm::vec3 u, v, w;
+Camera::Camera(glm::vec3 lookFrom, glm::vec3 lookAt, glm::vec3 vUp, float  verticalFov, float aspectRatio, float apeture, float focusDist) {
+	lensRadius = apeture / 2;
 	float theta = verticalFov * M_PI / 180.0f;
 	float halfHeight = tan(theta / 2);
 	float halfWidth = aspectRatio * halfHeight;
@@ -10,11 +10,13 @@ Camera::Camera(glm::vec3 lookFrom, glm::vec3 lookAt, glm::vec3 vUp, float  verti
 	u = glm::normalize(glm::cross(vUp, w));
 	v = glm::cross(w, u);
 	lowerLeftCorner = glm::vec3(-halfWidth, -halfHeight, -1.0);
-	lowerLeftCorner = origin - halfWidth * u - halfHeight * v - w;
-	horizontal = 2 * halfWidth * u;
-	vertical = 2 * halfHeight * v;
+	lowerLeftCorner = origin - halfWidth * focusDist * u - halfHeight * focusDist * v - focusDist * w;
+	horizontal = 2 * halfWidth * focusDist * u;
+	vertical = 2 * halfHeight * focusDist * v;
 }
 
 Ray Camera::getRay(float s, float t) {
-	return Ray(origin, lowerLeftCorner + s * horizontal + t * vertical - origin);
+	glm::vec3 rd = lensRadius * mathStuff::randomInUnitDisk();
+	glm::vec3 offset = u * rd.x + v * rd.y;
+	return Ray(origin + offset, lowerLeftCorner + s * horizontal + t * vertical - origin - offset);
 }

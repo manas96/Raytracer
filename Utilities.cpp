@@ -16,6 +16,14 @@ float mathStuff::getRand() {
 	return distr(generator);
 }
 
+glm::vec3 mathStuff::randomInUnitDisk() {
+	glm::vec3 p;
+	do {
+		p = 2.0f * glm::vec3(getRand(), getRand(), 0) - glm::vec3(1, 1, 0);
+	} while (glm::dot(p, p) >= 1.0f);
+	return p;
+}
+
 glm::vec3 mathStuff::randomInUnitSphere() {
 	glm::vec3 p;
 	do {
