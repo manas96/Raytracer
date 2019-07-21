@@ -14,3 +14,7 @@ Camera::Camera(glm::vec3 lookFrom, glm::vec3 lookAt, glm::vec3 vUp, float  verti
 	horizontal = 2 * halfWidth * u;
 	vertical = 2 * halfHeight * v;
 }
+
+Ray Camera::getRay(float s, float t) {
+	return Ray(origin, lowerLeftCorner + s * horizontal + t * vertical - origin);
+}

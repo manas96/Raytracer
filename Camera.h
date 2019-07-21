@@ -13,8 +13,6 @@ public:
 			//verticalFOV is in degrees
 	Camera(glm::vec3 lookFrom, glm::vec3 lookAt, glm::vec3 vUp, float  verticalFov, float aspectRatio);
 
-	Ray getRay(float u, float v) {
-		return Ray(origin, lowerLeftCorner + u * horizontal + v * vertical - origin);
-	}
+	Ray getRay(float s, float t);
 
 };

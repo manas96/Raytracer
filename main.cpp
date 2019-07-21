@@ -48,8 +48,7 @@ int main() {
 	int nx = 200;			//width
 	int ny = 100;			//height
 	int ns = 100;			//number of samples to take within each pixle. increase for better antialiasing 
-	Camera camera(90, float(nx) / float(ny));
-
+	Camera camera(glm::vec3(-2,2,1), glm::vec3(0,0,-1), glm::vec3(0,1,0), 45, float(nx) / float(ny));
 
 	std::ofstream  renderedImage;
 	std::ostringstream file;
