@@ -87,14 +87,14 @@ int main() {
 	glm::vec3 lookAt(0, 0, -1);
 	float distToFocus = glm::length(lookFrom - lookAt);
 	float aperture = 0.1f;
-	Camera camera(lookFrom, lookAt, glm::vec3(0,1,0), 20, float(nx) / float(ny), aperture, distToFocus);
+	Camera camera(lookFrom, lookAt, glm::vec3(0,1,0), 90, float(nx) / float(ny), aperture, distToFocus);
 
 	std::ofstream  renderedImage;
 	std::ostringstream file;
 	file << nx << " x " << ny << "_pixelAverage_" << ns << "_reflects_"<< MAX_REFLECTS << ".ppm";
 	renderedImage.open(file.str());
 	renderedImage << "P3\n" << nx << " " << ny << "\n255\n";
-/*
+	/*
 	const int MAX_OBJECTS = 5;
 	Hitable* list[MAX_OBJECTS];
 	list[0] = new Sphere(glm::vec3(0, 0, -1), 0.5, new Lambertian(glm::vec3(0.1, 0.2, 0.5)));
@@ -107,6 +107,7 @@ int main() {
 
 
 	Hitable* world = randomScene();
+
 	auto start = std::chrono::high_resolution_clock::now();
 
 	for (int j = ny - 1; j >= 0; j--) {
