@@ -38,7 +38,7 @@ bool mathStuff::refract(const glm::vec3& v, const glm::vec3& n, float ni_over_nt
 	float dt = glm::dot(uv, n);
 	float discriminant = 1.0f - ni_over_nt * ni_over_nt * (1 - dt * dt);
 	if (discriminant > 0) {
-		refracted = ni_over_nt * (uv - n * dt) - n * sqrt(discriminant);
+		refracted = ni_over_nt * (uv - n * dt) - n * (float)sqrt(discriminant);
 		return true;
 	}
 	else

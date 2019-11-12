@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <float.h>
 #include <glm/vec3.hpp>
 #include <glm/geometric.hpp>
 #include <chrono>
