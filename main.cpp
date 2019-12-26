@@ -74,15 +74,11 @@ Hitable* randomScene() {
 	return new HitableList(list, i);
 }
 
-
-
-
-
 int main() { 
 
-	int nx = 200;			//width
+	int nx = 100;			//width
 	int ny = 100;			//height
-	int ns = 100;			//number of samples to take within each pixle. increase for better antialiasing 
+	int ns = 20;			//number of samples to take within each pixle. increase for better antialiasing 
 
 	glm::vec3 lookFrom(3, 3, 2);
 	glm::vec3 lookAt(0, 0, -1);
@@ -113,6 +109,7 @@ int main() {
 
 	for (int j = ny - 1; j >= 0; j--) {
 		for (int i = 0; i < nx; i++) {		
+			std::cout << "Currently on pixel (" << i << ", "<< j << ")"<< std::endl;
 			glm::vec3 col(0, 0, 0);
 			for (int s = 0; s < ns; s++) {
 				float u = float(i + mathStuff::getRand()) / float(nx);
