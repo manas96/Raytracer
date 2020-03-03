@@ -1,0 +1,15 @@
+{
+    "cmake.configureOnOpen": true,
+    "files.exclude": {
+        ".git/**": true,
+        ".gitattributes": true,
+        ".gitignore": true,
+        "glm/**": true
+    },
+    "search.exclude": {
+        ".git/**": true
+    },
+    "files.associations": {
+        "iosfwd": "cpp"
+    }
+}

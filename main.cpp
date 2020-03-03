@@ -15,6 +15,7 @@
 #include "Material.h"
 #include "Lambertian.h"
 #include "Metal.h"
+#include "Triangle.h"
 #include "Dielectric.h"
 #define MAX_REFLECTS 50
 
@@ -76,34 +77,37 @@ Hitable* randomScene() {
 
 int main() { 
 
-	int nx = 100;			//width
-	int ny = 100;			//height
-	int ns = 20;			//number of samples to take within each pixle. increase for better antialiasing 
+	int nx = 200;			//width
+	int ny = 200;			//height
+	int ns = 50;			//number of samples to take within each pixle. increase for better antialiasing 
 
-	glm::vec3 lookFrom(3, 3, 2);
-	glm::vec3 lookAt(0, 0, -1);
+	glm::vec3 lookFrom(3.0, 3.0, 2.0);
+	glm::vec3 lookAt(0.0, 0.0, -1.0);
+	glm::vec3 vUp(0.0,1.0,0.0);
 	float distToFocus = glm::length(lookFrom - lookAt);
 	float aperture = 0.1f;
-	Camera camera(lookFrom, lookAt, glm::vec3(0,1,0), 90, float(nx) / float(ny), aperture, distToFocus);
+	Camera camera(lookFrom, lookAt, vUp, 90, float(nx) / float(ny), aperture, distToFocus);
 
 	std::ofstream  renderedImage;
 	std::ostringstream file;
 	file << nx << " x " << ny << "_pixelAverage_" << ns << "_reflects_"<< MAX_REFLECTS << ".ppm";
 	renderedImage.open(file.str());
 	renderedImage << "P3\n" << nx << " " << ny << "\n255\n";
-	/*
 	const int MAX_OBJECTS = 5;
 	Hitable* list[MAX_OBJECTS];
-	list[0] = new Sphere(glm::vec3(0, 0, -1), 0.5, new Lambertian(glm::vec3(0.1, 0.2, 0.5)));
-	list[1] = new Sphere(glm::vec3(0, -100.5, -1), 100, new Lambertian(glm::vec3(0.8, 0.8, 0.0)));
-	list[2] = new Sphere(glm::vec3(1, 0, -1), 0.5, new Metal(glm::vec3(0.8, 0.6, 0.2), 0));
+	list[0] = new Sphere(glm::vec3(0.0, 0.0, -1.0), 0.5, new Lambertian(glm::vec3(1, 0.2, 0.5)));
+	list[0] = new Triangle(glm::vec3(0.0, 0.0, -1), glm::vec3(5.0, 2.0, -1), glm::vec3(5.0, 3.0, -1), new Lambertian(glm::vec3(1.0, 0.0, 0.0)));
+
+	list[1] = new Sphere(glm::vec3(0.0, -100.5, -1.0), 100, new Lambertian(glm::vec3(0.8, 0.8, 0.0)));	//ground ball
+	list[2] = new Sphere(glm::vec3(1.0, 0.0, -1.0), 0.5, new Metal(glm::vec3(0.8, 0.6, 0.2), 0));
+	
 	list[3] = new Sphere(glm::vec3(-1, 0, -1), 0.5, new Dielectric(1.5));
 	list[4] = new Sphere(glm::vec3(-1, 0, -1), -0.45, new Dielectric(1.5));
 	Hitable* world = new HitableList(list, MAX_OBJECTS);
-	*/
+	
 
 
-	Hitable* world = randomScene();
+	// Hitable* world = randomScene();
 
 	auto start = std::chrono::high_resolution_clock::now();
 
