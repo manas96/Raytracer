@@ -10,6 +10,9 @@
         ".git/**": true
     },
     "files.associations": {
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "fstream": "cpp",
+        "ostream": "cpp",
+        "iostream": "cpp"
     }
 }

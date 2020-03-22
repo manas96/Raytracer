@@ -77,9 +77,9 @@ Hitable* randomScene() {
 
 int main() { 
 
-	int nx = 200;			//width
+	int nx = 400;			//width
 	int ny = 200;			//height
-	int ns = 50;			//number of samples to take within each pixle. increase for better antialiasing 
+	int ns = 1;			//number of samples to take within each pixle. increase for better antialiasing 
 
 	glm::vec3 lookFrom(3.0, 3.0, 2.0);
 	glm::vec3 lookAt(0.0, 0.0, -1.0);
@@ -91,6 +91,7 @@ int main() {
 	std::ofstream  renderedImage;
 	std::ostringstream file;
 	file << nx << " x " << ny << "_pixelAverage_" << ns << "_reflects_"<< MAX_REFLECTS << ".ppm";
+	std::cout << "Creating output file : " << file.str() << '\n';
 	renderedImage.open(file.str());
 	renderedImage << "P3\n" << nx << " " << ny << "\n255\n";
 	const int MAX_OBJECTS = 5;
@@ -137,3 +138,8 @@ int main() {
 
 	return 0;
 }
+/* TODO
+Read settings from file at runtime
+parallelize 
+implement BVH
+*/
