@@ -1,7 +1,7 @@
 #pragma once
 #include "Ray.h"
 #include "Hitable.h"
-#include <glm/geometric.hpp>
+#include "glm/geometric.hpp"
 #include "Utilities.h"
 
 class Material {

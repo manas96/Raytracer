@@ -1,7 +1,7 @@
 #pragma once
 #include "Ray.h"
-#include <glm/vec3.hpp>
-#include <glm/geometric.hpp>
+#include "glm/vec3.hpp"
+#include "glm/geometric.hpp"
 // forward declaration 
 class Material;
 
