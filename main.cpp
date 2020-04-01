@@ -18,12 +18,15 @@
 #include "Triangle.h"
 #include "Dielectric.h"
 #define MAX_REFLECTS 50
+#define TMIN 0.001
+#define TMAX FLT_MAX
+
 
 // returns a color for a given ray
 glm::vec3 color(const Ray &r, Hitable *world, int depth) {
 	hitRecord record;		//record.p is the pointAt() parameter
 
-	if (world->hit(r, 0.001, FLT_MAX, record)) {
+	if (world->hit(r, TMIN, FLT_MAX, record)) {
 		Ray scattered;
 		glm::vec3 attenuation;
 		if (depth < MAX_REFLECTS && record.materialPtr->scatter(r, record, attenuation, scattered)) {
@@ -34,7 +37,7 @@ glm::vec3 color(const Ray &r, Hitable *world, int depth) {
 		}
 	}
 	else {
-//--------------generate background gradient-----------------------------
+	//--------------generate background gradient-----------------------------
 	glm::vec3 unitDirection = glm::normalize(r.direction());
 	//squish t between 0 and 1
 	float t = 0.5f * (unitDirection.y + 1.0f);		// mathStuff::squish(t, -1, 1);		
@@ -42,6 +45,77 @@ glm::vec3 color(const Ray &r, Hitable *world, int depth) {
 	return mathStuff::lerp(WHITE, LIGHTBLUE, t);
 	}
 }
+
+int main() { 
+	typedef glm::vec3 point;
+	typedef glm::vec3 rgb;
+	typedef glm::vec3 vector3;
+
+	int nx = 640;			//width
+	int ny = 480;			//height
+	int ns = 100;			//number of samples to take within each pixle. increase for better antialiasing 
+
+	vector3 lookFrom(3.0, 3.0, 2.0);
+	vector3 lookAt(0.0, 0.0, -1.0);
+	vector3 vUp(0.0,1.0,0.0);
+	float distToFocus = glm::length(lookFrom - lookAt);
+	float aperture = 0.1f;
+	Camera camera(lookFrom, lookAt, vUp, 90, float(nx) / float(ny), aperture, distToFocus);
+
+	std::ofstream  raytracedImage;
+	std::ostringstream file;
+	file << nx << " x " << ny << "_pixelAverage_" << ns << "_reflects_"<< MAX_REFLECTS << ".ppm";
+	std::cout << "Creating output file : " << file.str() << '\n';
+	raytracedImage.open(file.str());
+	raytracedImage << "P3\n" << nx << " " << ny << "\n255\n";
+	const int MAX_OBJECTS = 5;
+	Hitable* list[MAX_OBJECTS];
+	list[0] = new Sphere(point(0.0, 0.0, -1.0), 0.5, new Lambertian(rgb(1, 0.2, 0.5)));
+	list[0] = new Triangle(point(0.0, 1.0, -1), point(2.0, 2.0, -1), point(2.0, 3.0, -1), new Lambertian(rgb(1.0, 0.0, 0.4)));
+
+	list[1] = new Sphere(point(0.0, -100.5, -1.0), 100, new Lambertian(rgb(0.8, 0.8, 0.0)));	//ground ball
+	list[2] = new Sphere(point(1.0, 0.0, -1.0), 0.5, new Metal(rgb(0.2, 0.8, 0.2), 0));
+	
+	list[3] = new Sphere(point(-1, 0, -1), 0.5, new Dielectric(1.5));
+	list[4] = new Sphere(point(-1, 0, -1), -0.45, new Dielectric(1.5));
+	Hitable* world = new HitableList(list, MAX_OBJECTS);
+	
+
+
+	// Hitable* world = randomScene();
+
+	auto start = std::chrono::high_resolution_clock::now();
+
+	for (int j = ny - 1; j >= 0; j--) {
+		for (int i = 0; i < nx; i++) {		
+			//std::cout << "Currently on pixel (" << i << ", "<< j << ")"<< std::endl;	// slows processing significantly, should not be used
+			rgb col(0, 0, 0);
+			for (int s = 0; s < ns; s++) {
+				float u = float(i + mathStuff::getRand()) / float(nx);
+				float v = float(j + mathStuff::getRand()) / float(ny);
+				Ray r = camera.getRay(u, v);
+				point p = r.pointAtParameter(2.0);
+				col += color(r, world, 0);
+			}
+			col /= float(ns);
+			col = rgb(sqrt(col.r), sqrt(col.g), sqrt(col.b));	// gamma correction : TODO optimize later
+			int ir = int(255.99 * col.r);
+			int ig = int(255.99 * col.g);
+			int ib = int(255.99 * col.b);
+			raytracedImage << ir << " " << ig << " " << ib << "\n";
+		}
+	}
+	raytracedImage.close();
+	auto end = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - start);
+	std::cout << "Render time : " << duration.count() << " seconds." << std::endl;
+
+	return 0;
+}
+/* TODO
+Read settings from file at runtime
+parallelize 
+implement BVH
 
 Hitable* randomScene() {
 	using namespace glm;
@@ -74,74 +148,9 @@ Hitable* randomScene() {
 	return new HitableList(list, i);
 }
 
-int main() { 
-	typedef glm::vec3 point;
-	typedef glm::vec3 rgb;
-	typedef glm::vec3 vector3;
-
-	int nx = 100;			//width
-	int ny = 100;			//height
-	int ns = 1;			//number of samples to take within each pixle. increase for better antialiasing 
-
-	vector3 lookFrom(3.0, 3.0, 2.0);
-	vector3 lookAt(0.0, 0.0, -1.0);
-	vector3 vUp(0.0,1.0,0.0);
-	float distToFocus = glm::length(lookFrom - lookAt);
-	float aperture = 0.1f;
-	Camera camera(lookFrom, lookAt, vUp, 90, float(nx) / float(ny), aperture, distToFocus);
-
-	std::ofstream  raytracedImage;
-	std::ostringstream file;
-	file << nx << " x " << ny << "_pixelAverage_" << ns << "_reflects_"<< MAX_REFLECTS << ".ppm";
-	std::cout << "Creating output file : " << file.str() << '\n';
-	raytracedImage.open(file.str());
-	raytracedImage << "P3\n" << nx << " " << ny << "\n255\n";
-	const int MAX_OBJECTS = 5;
-	Hitable* list[MAX_OBJECTS];
-	list[0] = new Sphere(point(0.0, 0.0, -1.0), 0.5, new Lambertian(rgb(1, 0.2, 0.5)));
-	list[0] = new Triangle(point(0.0, 0.0, -1), point(5.0, 2.0, -1), point(5.0, 3.0, -1), new Lambertian(rgb(1.0, 0.0, 0.0)));
-
-	list[1] = new Sphere(point(0.0, -100.5, -1.0), 100, new Lambertian(rgb(0.8, 0.8, 0.0)));	//ground ball
-	list[2] = new Sphere(point(1.0, 0.0, -1.0), 0.5, new Metal(rgb(0.8, 0.6, 0.2), 0));
-	
-	list[3] = new Sphere(point(-1, 0, -1), 0.5, new Dielectric(1.5));
-	list[4] = new Sphere(point(-1, 0, -1), -0.45, new Dielectric(1.5));
-	Hitable* world = new HitableList(list, MAX_OBJECTS);
-	
 
 
-	// Hitable* world = randomScene();
 
-	auto start = std::chrono::high_resolution_clock::now();
 
-	for (int j = ny - 1; j >= 0; j--) {
-		for (int i = 0; i < nx; i++) {		
-			std::cout << "Currently on pixel (" << i << ", "<< j << ")"<< std::endl;
-			rgb col(0, 0, 0);
-			for (int s = 0; s < ns; s++) {
-				float u = float(i + mathStuff::getRand()) / float(nx);
-				float v = float(j + mathStuff::getRand()) / float(ny);
-				Ray r = camera.getRay(u, v);
-				point p = r.pointAtParameter(2.0);
-				col += color(r, world, 0);
-			}
-			col /= float(ns);
-			col = rgb(sqrt(col.r), sqrt(col.g), sqrt(col.b));	// gamma correction : TODO optimize later
-			int ir = int(255.99 * col.r);
-			int ig = int(255.99 * col.g);
-			int ib = int(255.99 * col.b);
-			raytracedImage << ir << " " << ig << " " << ib << "\n";
-		}
-	}
-	raytracedImage.close();
-	auto end = std::chrono::high_resolution_clock::now();
-	auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - start);
-	std::cout << "Render time : " << duration.count() << " seconds." << std::endl;
-
-	return 0;
-}
-/* TODO
-Read settings from file at runtime
-parallelize 
-implement BVH
 */
+
