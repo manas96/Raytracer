@@ -17,6 +17,7 @@
 #include "Metal.h"
 #include "Triangle.h"
 #include "Dielectric.h"
+#include "vec3aliases.h"
 #define MAX_REFLECTS 50
 #define TMIN 0.001
 #define TMAX FLT_MAX
@@ -47,17 +48,14 @@ glm::vec3 ray_color(const Ray &r, Hitable *world, int depth) {
 }
 
 int main() { 
-	typedef glm::vec3 point;
-	typedef glm::vec3 rgb;
-	typedef glm::vec3 vector3;
 
 	int nx = 640;			//width
 	int ny = 480;			//height
 	int ns = 50;			//number of samples to take within each pixle. increase for better antialiasing 
 
-	vector3 lookFrom(3.0, 3.0, 2.0);
-	vector3 lookAt(0.0, 0.0, -1.0);
-	vector3 vUp(0.0,1.0,0.0);
+	vec3 lookFrom(3.0, 3.0, 2.0);
+	vec3 lookAt(0.0, 0.0, -1.0);
+	vec3 vUp(0.0,1.0,0.0);
 	float distToFocus = glm::length(lookFrom - lookAt);
 	float aperture = 0.1f;
 	Camera camera(lookFrom, lookAt, vUp, 90, float(nx) / float(ny), aperture, distToFocus);
@@ -90,7 +88,7 @@ int main() {
 
 	for (int j = ny - 1; j >= 0; j--) {
 		for (int i = 0; i < nx; i++) {		
-			//std::cout << "Currently on pixel (" << i << ", "<< j << ")"<< std::endl;	// slows processing significantly, should not be used
+			//std::cout << "Currently on pixel (" << i << ", "<< j << ")";	// slows processing, should not be used
 			rgb col(0, 0, 0);
 			for (int s = 0; s < ns; s++) {
 				float u = float(i + mathStuff::getRand()) / float(nx);
