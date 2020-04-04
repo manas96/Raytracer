@@ -1,16 +1,18 @@
 #include "Triangle.h"
 
-// an implementation of the Moller Trumbore algorithm
+// an implementation of the Moller Trumbore algorithm from 
+// https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/moller-trumbore-ray-triangle-intersection
+// TODO verify with wikipedia algorithm, some blurring occurs around one triangle vertex
 bool Triangle::hit(const Ray& r, float tMin, float tMax, hitRecord& rec) const {
     using namespace glm;
-    // reference https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/moller-trumbore-ray-triangle-intersection
+    
     vec3 v0v1 = v1 - v0; 
     vec3 v0v2 = v2 - v0; 
     vec3 pvec = cross(r.direction(), v0v2);
     float det = dot(v0v1, pvec);
     // // if the determinant is negative the triangle is backfacing
     // // if the determinant is close to 0, the ray misses the triangle
-    // if (det < kEpsilon) return false; 
+    if (det < tMin) return false; 
     // // ray and triangle are parallel if det is close to 0
     if (fabs(det) < tMin) return false; 
 

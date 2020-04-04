@@ -6,5 +6,5 @@ file(GLOB SOURCES "*.h" "*.cpp" )
 
 add_executable(main ${SOURCES})
 
-target_include_directories(main PUBLIC "glm")
+target_include_directories(main PUBLIC "libs/glm")
 

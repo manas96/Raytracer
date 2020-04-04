@@ -11,7 +11,7 @@ bool Sphere::hit(const Ray& r, float tMin, float tMax, hitRecord& rec) const{
 		if (temp < tMax && temp > tMin) {
 			rec.t = temp;
 			rec.p = r.pointAtParameter(rec.t);
-			rec.normal = (rec.p - center) / radius;		// can just use glm's normalize function
+			rec.normal = (rec.p - center) / radius;		// dividing cheaper than sqrt
 			rec.materialPtr = material;
 			return true;
 		}

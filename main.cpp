@@ -23,14 +23,14 @@
 
 
 // returns a color for a given ray
-glm::vec3 color(const Ray &r, Hitable *world, int depth) {
+glm::vec3 ray_color(const Ray &r, Hitable *world, int depth) {
 	hitRecord record;		//record.p is the pointAt() parameter
 
 	if (world->hit(r, TMIN, FLT_MAX, record)) {
 		Ray scattered;
 		glm::vec3 attenuation;
 		if (depth < MAX_REFLECTS && record.materialPtr->scatter(r, record, attenuation, scattered)) {
-			return attenuation * color(scattered, world, depth + 1);
+			return attenuation * ray_color(scattered, world, depth + 1);
 		}
 		else {
 			return BLACK;
@@ -51,8 +51,8 @@ int main() {
 	typedef glm::vec3 rgb;
 	typedef glm::vec3 vector3;
 
-	int nx = 640;			//width
-	int ny = 480;			//height
+	int nx = 100;			//width
+	int ny = 100;			//height
 	int ns = 100;			//number of samples to take within each pixle. increase for better antialiasing 
 
 	vector3 lookFrom(3.0, 3.0, 2.0);
@@ -70,12 +70,14 @@ int main() {
 	raytracedImage << "P3\n" << nx << " " << ny << "\n255\n";
 	const int MAX_OBJECTS = 5;
 	Hitable* list[MAX_OBJECTS];
-	list[0] = new Sphere(point(0.0, 0.0, -1.0), 0.5, new Lambertian(rgb(1, 0.2, 0.5)));
+	
 	list[0] = new Triangle(point(0.0, 1.0, -1), point(2.0, 2.0, -1), point(2.0, 3.0, -1), new Lambertian(rgb(1.0, 0.0, 0.4)));
+	//list[5] = new Triangle(point(-2, 1.0, -1), point(0.0, 2.0, -1), point(0.0, 3.0, -1), new Lambertian(rgb(0.2, 0.3, 0.4)));
 
 	list[1] = new Sphere(point(0.0, -100.5, -1.0), 100, new Lambertian(rgb(0.8, 0.8, 0.0)));	//ground ball
 	list[2] = new Sphere(point(1.0, 0.0, -1.0), 0.5, new Metal(rgb(0.2, 0.8, 0.2), 0));
-	
+	//list[6] = new Sphere(point(-2.0, 1.0, 1.0), 1.0, new Metal(rgb(1, .2, .7), 0));
+
 	list[3] = new Sphere(point(-1, 0, -1), 0.5, new Dielectric(1.5));
 	list[4] = new Sphere(point(-1, 0, -1), -0.45, new Dielectric(1.5));
 	Hitable* world = new HitableList(list, MAX_OBJECTS);
@@ -95,7 +97,7 @@ int main() {
 				float v = float(j + mathStuff::getRand()) / float(ny);
 				Ray r = camera.getRay(u, v);
 				point p = r.pointAtParameter(2.0);
-				col += color(r, world, 0);
+				col += ray_color(r, world, 0);
 			}
 			col /= float(ns);
 			col = rgb(sqrt(col.r), sqrt(col.g), sqrt(col.b));	// gamma correction : TODO optimize later

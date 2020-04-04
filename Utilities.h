@@ -18,7 +18,7 @@ namespace mathStuff {
 
 	static std::random_device randDevice;
 	static std::mt19937 generator(randDevice());
-	static std::uniform_real_distribution<float> distr(0, 1); //exclusive of 1
+	static std::uniform_real_distribution<float> distr(0.0, 1.0); //exclusive of 1
 
 	glm::vec3 lerp(glm::vec3 start, glm::vec3 end, float howMuch);
 
