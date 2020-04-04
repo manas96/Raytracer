@@ -10,7 +10,8 @@ public:
 	Material* material;
 
 	Sphere(glm::vec3 c, float r, Material* m) : center(c), radius(r), material(m) {};
-
+	
+	//tMin and tMax are used to define valid range for calculations to avoid float inaccuracies.
 	bool hit(const Ray& r, float tMin, float tMax, hitRecord& rec) const override;
 };
 

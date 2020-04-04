@@ -51,9 +51,9 @@ int main() {
 	typedef glm::vec3 rgb;
 	typedef glm::vec3 vector3;
 
-	int nx = 100;			//width
-	int ny = 100;			//height
-	int ns = 100;			//number of samples to take within each pixle. increase for better antialiasing 
+	int nx = 640;			//width
+	int ny = 480;			//height
+	int ns = 50;			//number of samples to take within each pixle. increase for better antialiasing 
 
 	vector3 lookFrom(3.0, 3.0, 2.0);
 	vector3 lookAt(0.0, 0.0, -1.0);
