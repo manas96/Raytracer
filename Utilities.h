@@ -28,6 +28,13 @@ namespace mathStuff {
 	inline float ffmin(float a, float b) { return a <= b ? a : b; }
 	inline float ffmax(float a, float b) { return a >= b ? a : b; }
 
+	// clamps x to [min,max]
+	inline float clamp(float x, float min, float max) {
+		if (x < min) return min;
+		if (x > max) return max;
+		return x;
+	}
+
 	vec3 lerp(vec3 start, vec3 end, float howMuch);
 
 	float squish(float t, float min, float max);
