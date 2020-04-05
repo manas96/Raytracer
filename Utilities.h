@@ -18,9 +18,9 @@ namespace color {
 
 namespace mathStuff {
 
-	static std::random_device randDevice;
-	static std::mt19937 generator(randDevice());
-	static std::uniform_real_distribution<float> distr(0.0, 1.0); //exclusive of 1
+	extern std::random_device randDevice;
+	extern std::mt19937 generator;
+	extern std::uniform_real_distribution<float> distr; //exclusive of 1
 
 	inline double degreesToRadians(float degrees) {
 		return degrees * M_PI / 180;

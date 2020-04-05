@@ -18,9 +18,9 @@
 #include "Triangle.h"
 #include "Dielectric.h"
 #include "Vec3aliases.h"
-#define MAX_REFLECTS 50
-#define TMIN 0.001
-#define TMAX FLT_MAX
+constexpr int MAX_REFLECTS = 50;
+constexpr float TMIN = 0.001f;
+constexpr float TMAX = FLT_MAX;
 
 
 // returns a color for a given ray
@@ -28,7 +28,7 @@ vec3 ray_color(const Ray &r, const Hitable& world, int depth) {
 	using namespace color;
 	hitRecord record;		
 
-	if (world.hit(r, (float)TMIN, FLT_MAX, record)) {
+	if (world.hit(r, TMIN, FLT_MAX, record)) {
 		Ray scattered;
 		vec3 attenuation;
 		if (depth < MAX_REFLECTS && record.materialPtr->scatter(r, record, attenuation, scattered)) {

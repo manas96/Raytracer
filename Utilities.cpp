@@ -9,6 +9,11 @@ namespace color {
 	rgb LIGHTBLUE(0.5, 0.7, 1.0);
 }
 
+namespace mathStuff {
+	std::random_device randDevice;
+	std::mt19937 generator(randDevice());
+	std::uniform_real_distribution<float> distr(0.0, 1.0); //exclusive of 1
+}
 
 
 vec3 mathStuff::lerp(vec3 start, vec3 end, float howMuch) {
