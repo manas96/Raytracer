@@ -12,7 +12,6 @@ namespace color {
 namespace mathStuff {
 	std::random_device randDevice;
 	std::mt19937 generator(randDevice());
-	std::uniform_real_distribution<float> distr(0.0, 1.0); //exclusive of 1
 }
 
 
@@ -29,6 +28,12 @@ vec3 mathStuff::reflect(const vec3& v, const vec3 n) {
 }
 
 float mathStuff::getRand() {
+	static std::uniform_real_distribution<float> distr(0.0, 1.0); //exclusive of 1
+	return distr(generator);
+}
+
+float mathStuff::getRand(float min, float max) {
+	static std::uniform_real_distribution<float> distr(min, max); // exclusive of max
 	return distr(generator);
 }
 

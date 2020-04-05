@@ -20,7 +20,6 @@ namespace mathStuff {
 
 	extern std::random_device randDevice;
 	extern std::mt19937 generator;
-	extern std::uniform_real_distribution<float> distr; //exclusive of 1
 
 	inline double degreesToRadians(float degrees) {
 		return degrees * M_PI / 180;
@@ -37,8 +36,11 @@ namespace mathStuff {
 
 	bool refract(const vec3& v, const vec3& n, float ni_over_nt, vec3& refracted);
 
-	// returns random number between 0 and 1 
+	// returns random number between [0,1)
 	float getRand();
+
+	// returns random number between [min,max)
+	float getRand(float min, float max);
 
 	// returns a random point in a unit sphere
 	point randomInUnitSphere();
