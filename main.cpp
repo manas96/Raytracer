@@ -39,7 +39,7 @@ vec3 ray_color(const Ray &r, const Hitable& world, int depth) {
 		}
 	}
 	else {
-	//--------------generate background gradient-----------------------------
+	//generate background gradient
 	vec3 unitDirection = glm::normalize(r.direction());
 	//squish t between 0 and 1
 	float t = 0.5f * (unitDirection.y + 1.0f);		// mathStuff::squish(t, -1, 1);		
@@ -69,16 +69,7 @@ int main() {
 	std::cout << "Creating output file : " << file.str() << '\n';
 	raytracedImage.open(file.str());
 	raytracedImage << "P3\n" << nx << " " << ny << "\n255\n";
-	/*
-	const int MAX_OBJECTS = 5;
-	Hitable* list[MAX_OBJECTS];
-	
-	list[0] = new Triangle(point(0.0, 1.0, -1), point(2.0, 2.0, -1), point(2.0, 3.0, -1), new Lambertian(rgb(1.0, 0.0, 0.4)));
-	//list[5] = new Triangle(point(-2, 1.0, -1), point(0.0, 2.0, -1), point(0.0, 3.0, -1), new Lambertian(rgb(0.2, 0.3, 0.4)));
 
-
-	Hitable* world = new HitableList(list, MAX_OBJECTS);
-	*/
 	HitableList world;
 	world.add(make_shared<Sphere>(point(0.0f, -100.5f, -1.0f), 100.0f, new Lambertian(rgb(0.8f, 0.8f, 0.0f))));		// ground sphere
 	world.add(make_shared<Sphere>(point(1.0f, 0.0f, -1.0f), 0.5f, new Metal(rgb(0.2f, 0.8f, 0.2f), 0.0f)));
@@ -87,10 +78,6 @@ int main() {
 	world.add(make_shared<Sphere>(point(-1.0f, 0.0f, -1.0f), -0.45f, new Dielectric(1.5f)));
 	world.add(make_shared<Triangle>(point(0.0f, 1.0f, -1.0f), point(2.0f, 2.0f, -1.0f), point(2.0f, 3.0f, -1.0f), new Lambertian(rgb(1.0f, 0.0f, 0.4f))));
 	world.add(make_shared<Triangle>(point(-2.0f, 1.0f, -1.0f), point(0.0f, 2.0f, -1.0f), point(0.0f, 3.0f, -1.0f), new Lambertian(rgb(0.2f, 0.3f, 0.4f))));
-
-
-
-	// Hitable* world = randomScene();
 
 	auto start = std::chrono::high_resolution_clock::now();
 
