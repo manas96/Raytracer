@@ -95,7 +95,7 @@ int main() {
 			}
 			col /= float(ns);
 			col = rgb(sqrt(col.r), sqrt(col.g), sqrt(col.b));	// gamma correction : TODO optimize later
-			// get color values between [0,255]
+			// get color values between [0,255] TODO use openGL to display in real time
 			int ir = static_cast<int>(256 * clamp(col.r, 0.0f, 0.999f));
 			int ig = static_cast<int>(256 * clamp(col.g, 0.0f, 0.999f));
 			int ib = static_cast<int>(256 * clamp(col.b, 0.0f, 0.999f));

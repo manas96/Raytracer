@@ -49,6 +49,9 @@ namespace mathStuff {
 	// returns random number between [min,max)
 	float getRand(float min, float max);
 
+	inline vec3 randomVec3() { return vec3(getRand(), getRand(), getRand()); }
+	inline vec3 randomVec3(float min, float max) { return vec3(getRand(min, max), getRand(min, max), getRand(min, max)); }
+
 	// returns a random point in a unit sphere
 	point randomInUnitSphere();
 

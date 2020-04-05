@@ -46,11 +46,11 @@ vec3 mathStuff::randomInUnitDisk() {
 }
 
 point mathStuff::randomInUnitSphere() {
-	point p;
-	do {
-		p = 2.0f * vec3(getRand(), getRand(), getRand()) - vec3(1, 1, 1);
-	} while (glm::length(p) >= 1.0f);
-	return p;
+	while (true) {
+		vec3 p = randomVec3(-1.0f, 1.0f);
+		if (glm::dot(p, p) >= 1) continue;
+		return p;
+	}	
 }
 
 // see wikipedia for equation explanation
