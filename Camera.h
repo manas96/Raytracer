@@ -1,7 +1,7 @@
 #pragma once
 #include "Utilities.h"
 #include "Ray.h"
-#include "vec3aliases.h"
+#include "Vec3aliases.h"
 
 class Camera {
 public: 

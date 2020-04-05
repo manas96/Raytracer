@@ -2,12 +2,12 @@
 
 // Using a negative radius makes the normals point inwards, resulting in a transparent surface
 
-bool Dielectric::scatter(const Ray& rayIn, const hitRecord& record, glm::vec3& attenuation, Ray& scattered) const {
-	glm::vec3 outwardNormal;
-	glm::vec3 reflected = mathStuff::reflect(rayIn.direction(), record.normal);
+bool Dielectric::scatter(const Ray& rayIn, const hitRecord& record, vec3& attenuation, Ray& scattered) const {
+	vec3 outwardNormal;
+	vec3 reflected = mathStuff::reflect(rayIn.direction(), record.normal);
 	float ni_over_nt;
-	attenuation = glm::vec3(1, 1, 1);	// We squelch all 3 channels (RGB)		
-	glm::vec3 refracted;
+	attenuation = vec3(1, 1, 1);	// We squelch all 3 channels (RGB)		
+	vec3 refracted;
 	float reflectProb;
 	float cosine;
 

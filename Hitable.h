@@ -2,12 +2,12 @@
 #include "Ray.h"
 #include "glm/vec3.hpp"
 #include "glm/geometric.hpp"
-#include "vec3aliases.h"
+#include "Vec3aliases.h"
 // forward declaration 
 class Material;
 
 struct hitRecord {
-	float t;
+	float t;		// the "t" parameter of a ray i.e. how far along the ray we are
 	point p;		// point at which ray intersects geometry
 	vec3 normal;
 	bool frontFace;

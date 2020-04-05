@@ -1,13 +1,19 @@
 #pragma once
 #include "Hitable.h"
+#include <memory>
+#include <vector>
 
-// TODO change this to use std::vector
 class HitableList :public Hitable
 {
 public :
-	Hitable** list;
-	int listSize;
-	HitableList(Hitable** l, int n) { list = l; listSize = n; }
+	std::vector<std::shared_ptr<Hitable>> objects;
+
+	HitableList() {}
+	HitableList(std::shared_ptr<Hitable> object) { add(object); }
+
+	void clear() { objects.clear(); }
+	void add(std::shared_ptr<Hitable> object) { objects.push_back(object); }
+
 	bool hit(const Ray& r, float tMin, float tMax, hitRecord& record) const;
 };
 

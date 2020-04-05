@@ -1,7 +1,7 @@
 #include "Sphere.h"
 
 bool Sphere::hit(const Ray& r, float tMin, float tMax, hitRecord& rec) const{
-	glm::vec3 oc = r.origin() - center;
+	vec3 oc = r.origin() - center;
 	float a = glm::dot(r.direction(), r.direction());
 	float half_b = glm::dot(oc, r.direction());
 	float c = glm::dot(oc, oc) - radius * radius;

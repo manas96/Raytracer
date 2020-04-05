@@ -17,19 +17,20 @@
 #include "Metal.h"
 #include "Triangle.h"
 #include "Dielectric.h"
-#include "vec3aliases.h"
+#include "Vec3aliases.h"
 #define MAX_REFLECTS 50
 #define TMIN 0.001
 #define TMAX FLT_MAX
 
 
 // returns a color for a given ray
-glm::vec3 ray_color(const Ray &r, Hitable *world, int depth) {
-	hitRecord record;		//record.p is the pointAt() parameter
+vec3 ray_color(const Ray &r, const Hitable& world, int depth) {
+	using namespace color;
+	hitRecord record;		
 
-	if (world->hit(r, TMIN, FLT_MAX, record)) {
+	if (world.hit(r, (float)TMIN, FLT_MAX, record)) {
 		Ray scattered;
-		glm::vec3 attenuation;
+		vec3 attenuation;
 		if (depth < MAX_REFLECTS && record.materialPtr->scatter(r, record, attenuation, scattered)) {
 			return attenuation * ray_color(scattered, world, depth + 1);
 		}
@@ -39,7 +40,7 @@ glm::vec3 ray_color(const Ray &r, Hitable *world, int depth) {
 	}
 	else {
 	//--------------generate background gradient-----------------------------
-	glm::vec3 unitDirection = glm::normalize(r.direction());
+	vec3 unitDirection = glm::normalize(r.direction());
 	//squish t between 0 and 1
 	float t = 0.5f * (unitDirection.y + 1.0f);		// mathStuff::squish(t, -1, 1);		
 	// lerp according to up/downness	
@@ -48,6 +49,8 @@ glm::vec3 ray_color(const Ray &r, Hitable *world, int depth) {
 }
 
 int main() { 
+
+	using std::make_shared;
 
 	int nx = 640;			//width
 	int ny = 480;			//height
@@ -66,20 +69,25 @@ int main() {
 	std::cout << "Creating output file : " << file.str() << '\n';
 	raytracedImage.open(file.str());
 	raytracedImage << "P3\n" << nx << " " << ny << "\n255\n";
+	/*
 	const int MAX_OBJECTS = 5;
 	Hitable* list[MAX_OBJECTS];
 	
 	list[0] = new Triangle(point(0.0, 1.0, -1), point(2.0, 2.0, -1), point(2.0, 3.0, -1), new Lambertian(rgb(1.0, 0.0, 0.4)));
 	//list[5] = new Triangle(point(-2, 1.0, -1), point(0.0, 2.0, -1), point(0.0, 3.0, -1), new Lambertian(rgb(0.2, 0.3, 0.4)));
 
-	list[1] = new Sphere(point(0.0, -100.5, -1.0), 100, new Lambertian(rgb(0.8, 0.8, 0.0)));	//ground ball
-	list[2] = new Sphere(point(1.0, 0.0, -1.0), 0.5, new Metal(rgb(0.2, 0.8, 0.2), 0));
-	//list[6] = new Sphere(point(-2.0, 1.0, 1.0), 1.0, new Metal(rgb(1, .2, .7), 0));
 
-	list[3] = new Sphere(point(-1, 0, -1), 0.5, new Dielectric(1.5));
-	list[4] = new Sphere(point(-1, 0, -1), -0.45, new Dielectric(1.5));
 	Hitable* world = new HitableList(list, MAX_OBJECTS);
-	
+	*/
+	HitableList world;
+	world.add(make_shared<Sphere>(point(0.0f, -100.5f, -1.0f), 100.0f, new Lambertian(rgb(0.8f, 0.8f, 0.0f))));		// ground sphere
+	world.add(make_shared<Sphere>(point(1.0f, 0.0f, -1.0f), 0.5f, new Metal(rgb(0.2f, 0.8f, 0.2f), 0.0f)));
+	world.add(make_shared<Sphere>(point(-2.0f, 1.0f, 1.0f), 1.0f, new Metal(rgb(1.0f, 0.2f, 0.7f), 0.0f)));
+	world.add(make_shared<Sphere>(point(-1.0f, 0.0f, -1.0f), 0.5f, new Dielectric(1.5f)));
+	world.add(make_shared<Sphere>(point(-1.0f, 0.0f, -1.0f), -0.45f, new Dielectric(1.5f)));
+	world.add(make_shared<Triangle>(point(0.0f, 1.0f, -1.0f), point(2.0f, 2.0f, -1.0f), point(2.0f, 3.0f, -1.0f), new Lambertian(rgb(1.0f, 0.0f, 0.4f))));
+	world.add(make_shared<Triangle>(point(-2.0f, 1.0f, -1.0f), point(0.0f, 2.0f, -1.0f), point(0.0f, 3.0f, -1.0f), new Lambertian(rgb(0.2f, 0.3f, 0.4f))));
+
 
 
 	// Hitable* world = randomScene();

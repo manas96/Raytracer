@@ -9,7 +9,7 @@ Camera::Camera(point lookFrom, point lookAt, vec3 vUp, float  verticalFov, float
 	w = glm::normalize(lookFrom - lookAt);
 	u = glm::normalize(glm::cross(vUp, w));
 	v = glm::cross(w, u);
-	lowerLeftCorner = glm::vec3(-halfWidth, -halfHeight, 
+	lowerLeftCorner = vec3(-halfWidth, -halfHeight, 
 -1.0);
 	lowerLeftCorner = origin - halfWidth * focusDist * u - halfHeight * focusDist * v - focusDist * w;
 	horizontal = 2 * halfWidth * focusDist * u;
