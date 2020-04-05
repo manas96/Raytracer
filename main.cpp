@@ -51,6 +51,7 @@ vec3 ray_color(const Ray &r, const Hitable& world, int depth) {
 int main() { 
 
 	using std::make_shared;
+	using namespace mathStuff;
 
 	int nx = 640;			//width
 	int ny = 480;			//height
@@ -86,17 +87,19 @@ int main() {
 			//std::cout << "Currently on pixel (" << i << ", "<< j << ")";	// slows processing, should not be used
 			rgb col(0, 0, 0);
 			for (int s = 0; s < ns; s++) {
-				float u = float(i + mathStuff::getRand()) / float(nx);
-				float v = float(j + mathStuff::getRand()) / float(ny);
+				float u = float(i + getRand()) / float(nx);
+				float v = float(j + getRand()) / float(ny);
 				Ray r = camera.getRay(u, v);
 				point p = r.pointAtParameter(2.0);
 				col += ray_color(r, world, 0);
 			}
 			col /= float(ns);
 			col = rgb(sqrt(col.r), sqrt(col.g), sqrt(col.b));	// gamma correction : TODO optimize later
-			int ir = int(255.99 * col.r);
-			int ig = int(255.99 * col.g);
-			int ib = int(255.99 * col.b);
+			// get color values between [0,255]
+			int ir = static_cast<int>(256 * clamp(col.r, 0.0f, 0.999f));
+			int ig = static_cast<int>(256 * clamp(col.g, 0.0f, 0.999f));
+			int ib = static_cast<int>(256 * clamp(col.b, 0.0f, 0.999f));
+
 			raytracedImage << ir << " " << ig << " " << ib << "\n";
 		}
 	}
