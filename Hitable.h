@@ -3,6 +3,7 @@
 #include "glm/vec3.hpp"
 #include "glm/geometric.hpp"
 #include "Vec3aliases.h"
+#include <memory>
 // forward declaration 
 class Material;
 
@@ -16,7 +17,7 @@ struct hitRecord {
 		frontFace = glm::dot(r.direction(), outwardNormal) < 0;
 		normal = frontFace ? outwardNormal : -outwardNormal;
 	}
-	Material* materialPtr;
+	std::shared_ptr<Material> materialPtr;
 };
 
 class Hitable {

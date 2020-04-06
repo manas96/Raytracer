@@ -72,13 +72,13 @@ int main() {
 	raytracedImage << "P3\n" << nx << " " << ny << "\n255\n";
 
 	HitableList world;
-	world.add(make_shared<Sphere>(point(0.0f, -100.5f, -1.0f), 100.0f, new Lambertian(rgb(0.8f, 0.8f, 0.0f))));		// ground sphere
-	world.add(make_shared<Sphere>(point(1.0f, 0.0f, -1.0f), 0.5f, new Metal(rgb(0.2f, 0.8f, 0.2f), 0.0f)));
-	world.add(make_shared<Sphere>(point(-2.0f, 1.0f, 1.0f), 1.0f, new Metal(rgb(1.0f, 0.2f, 0.7f), 0.0f)));
-	world.add(make_shared<Sphere>(point(-1.0f, 0.0f, -1.0f), 0.5f, new Dielectric(1.5f)));
-	world.add(make_shared<Sphere>(point(-1.0f, 0.0f, -1.0f), -0.45f, new Dielectric(1.5f)));
-	world.add(make_shared<Triangle>(point(0.0f, 1.0f, -1.0f), point(2.0f, 2.0f, -1.0f), point(2.0f, 3.0f, -1.0f), new Lambertian(rgb(1.0f, 0.0f, 0.4f))));
-	world.add(make_shared<Triangle>(point(-2.0f, 1.0f, -1.0f), point(0.0f, 2.0f, -1.0f), point(0.0f, 3.0f, -1.0f), new Lambertian(rgb(0.2f, 0.3f, 0.4f))));
+	world.add(make_shared<Sphere>(point(0.0f, -100.5f, -1.0f), 100.0f, make_shared<Lambertian>(rgb(0.8f, 0.8f, 0.0f))));		// ground sphere
+	world.add(make_shared<Sphere>(point(1.0f, 0.0f, -1.0f), 0.5f, make_shared<Metal>(rgb(0.2f, 0.8f, 0.2f), 0.0f)));
+	world.add(make_shared<Sphere>(point(-2.0f, 1.0f, 1.0f), 1.0f, make_shared<Metal>(rgb(1.0f, 0.2f, 0.7f), 0.0f)));
+	world.add(make_shared<Sphere>(point(-1.0f, 0.0f, -1.0f), 0.5f, make_shared<Dielectric>(1.5f)));
+	world.add(make_shared<Sphere>(point(-1.0f, 0.0f, -1.0f), -0.45f, make_shared<Dielectric>(1.5f)));
+	//world.add(make_shared<Triangle>(point(0.0f, 1.0f, -1.0f), point(2.0f, 2.0f, -1.0f), point(2.0f, 3.0f, -1.0f), new Lambertian(rgb(1.0f, 0.0f, 0.4f))));
+	//world.add(make_shared<Triangle>(point(-2.0f, 1.0f, -1.0f), point(0.0f, 2.0f, -1.0f), point(0.0f, 3.0f, -1.0f), new Lambertian(rgb(0.2f, 0.3f, 0.4f))));
 
 	auto start = std::chrono::high_resolution_clock::now();
 

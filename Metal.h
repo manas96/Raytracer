@@ -4,14 +4,11 @@
 class Metal : public Material
 {
 public:
-	vec3 albedo;
-	float fuzz;
+	rgb albedo;
+	float fuzz;		// fuzziness, how much the reflection is blurred
 
-	Metal(const vec3& a, float fuzziness) : albedo(a) {
-		if (fuzziness < 1) fuzz = fuzziness;
-		else fuzz = 1;
-	}
+	Metal(const vec3& a, float fuzziness) : albedo(a), fuzz(fuzziness < 1 ? fuzziness : 1) {}
 
-	virtual bool scatter(const Ray& rayIn, const hitRecord& record, vec3& attenuation, Ray& scattered) const;
+	virtual bool scatter(const Ray& rayIn, const hitRecord& record, rgb& attenuation, Ray& scattered) const;
 };
 

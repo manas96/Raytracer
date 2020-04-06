@@ -23,8 +23,8 @@ float mathStuff::squish(float t, float min, float max) {
 	return (t - min) / (max - min);
 }
 
-vec3 mathStuff::reflect(const vec3& v, const vec3 n) {
-	return v - 2.0f * glm::dot(v, n) * n;
+vec3 mathStuff::reflect(const vec3& v, const vec3 normal) {
+	return v - 2.0f * glm::dot(v, normal) * normal;
 }
 
 float mathStuff::getRand() {
@@ -46,6 +46,7 @@ vec3 mathStuff::randomInUnitDisk() {
 }
 
 // TODO understand how this is better than randomInUnitSphere()?
+//TODO optimize, this is slower than randomInUnitSphere()
 vec3 mathStuff::randomUnitVector() {
 	float a = getRand(0.0f, 2.0f * PI);
 	float z = getRand(-1.0f, 1.0f);
@@ -73,7 +74,6 @@ bool mathStuff::refract(const vec3& v, const vec3& n, float ni_over_nt, vec3& re
 	else
 		return false;
 }
-
 
 float mathStuff::schick(float cosine, float refIdx) {
 	float r0 = (1 - refIdx) / (1 + refIdx);
