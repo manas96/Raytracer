@@ -4,7 +4,7 @@
 #include <random>
 #include "Vec3aliases.h"
 
-constexpr float M_PI = 3.14159265358979323846f;
+constexpr float PI = 3.14159265358979323846f;
 
 namespace color {
 	extern rgb RED;
@@ -22,7 +22,7 @@ namespace mathStuff {
 	extern std::mt19937 generator;
 
 	inline double degreesToRadians(float degrees) {
-		return degrees * M_PI / 180;
+		return degrees * PI / 180;
 	}
 
 	inline float ffmin(float a, float b) { return a <= b ? a : b; }
@@ -54,6 +54,8 @@ namespace mathStuff {
 
 	// returns a random point in a unit sphere
 	point randomInUnitSphere();
+
+	vec3 randomUnitVector();
 
 	//see https://en.wikipedia.org/wiki/Schlick%27s_approximation
 	// fast computation for fresnel reflection

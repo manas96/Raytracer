@@ -2,7 +2,7 @@
 
 Camera::Camera(point lookFrom, point lookAt, vec3 vUp, float  verticalFov, float aspectRatio, float apeture, float focusDist) {
 	lensRadius = apeture / 2;
-	float theta = verticalFov * M_PI / 180.0f;
+	float theta = verticalFov * PI / 180.0f;
 	float halfHeight = tan(theta / 2);
 	float halfWidth = aspectRatio * halfHeight;
 	origin = lookFrom;

@@ -45,6 +45,14 @@ vec3 mathStuff::randomInUnitDisk() {
 	return p;
 }
 
+// TODO understand how this is better than randomInUnitSphere()?
+vec3 mathStuff::randomUnitVector() {
+	float a = getRand(0.0f, 2.0f * PI);
+	float z = getRand(-1.0f, 1.0f);
+	float r = sqrt(1 - z * z);
+	return vec3(r * cos(a), r * sin(a), z);
+}
+
 point mathStuff::randomInUnitSphere() {
 	while (true) {
 		vec3 p = randomVec3(-1.0f, 1.0f);
