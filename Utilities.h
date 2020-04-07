@@ -39,9 +39,9 @@ namespace mathStuff {
 
 	float squish(float t, float min, float max);
 
-	vec3 reflect(const vec3& v, const vec3 normal);
+	vec3 reflect(const vec3& incoming, const vec3 normal);
 
-	bool refract(const vec3& v, const vec3& n, float ni_over_nt, vec3& refracted);
+	vec3 refract(const vec3& incoming, const vec3& normal, float etai_over_etat);
 
 	// returns random number between [0,1)
 	float getRand();

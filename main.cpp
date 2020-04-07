@@ -53,9 +53,9 @@ int main() {
 	using std::make_shared;
 	using namespace mathStuff;
 
-	int nx = 640;			//width
-	int ny = 480;			//height
-	int ns = 50;			//number of samples to take within each pixle. increase for better antialiasing 
+	int nx = 2048;			//width
+	int ny = 1080;			//height
+	int ns = 1000;			//number of samples to take within each pixle. increase for better antialiasing 
 
 	vec3 lookFrom(3.0, 3.0, 2.0);
 	vec3 lookAt(0.0, 0.0, -1.0);
@@ -77,8 +77,10 @@ int main() {
 	world.add(make_shared<Sphere>(point(-2.0f, 1.0f, 1.0f), 1.0f, make_shared<Metal>(rgb(1.0f, 0.2f, 0.7f), 0.0f)));
 	world.add(make_shared<Sphere>(point(-1.0f, 0.0f, -1.0f), 0.5f, make_shared<Dielectric>(1.5f)));
 	world.add(make_shared<Sphere>(point(-1.0f, 0.0f, -1.0f), -0.45f, make_shared<Dielectric>(1.5f)));
-	//world.add(make_shared<Triangle>(point(0.0f, 1.0f, -1.0f), point(2.0f, 2.0f, -1.0f), point(2.0f, 3.0f, -1.0f), new Lambertian(rgb(1.0f, 0.0f, 0.4f))));
-	//world.add(make_shared<Triangle>(point(-2.0f, 1.0f, -1.0f), point(0.0f, 2.0f, -1.0f), point(0.0f, 3.0f, -1.0f), new Lambertian(rgb(0.2f, 0.3f, 0.4f))));
+	world.add(make_shared<Sphere>(point(0.0f, .0f, -1.0f), -0.5f, make_shared<Dielectric>(1.7f)));
+
+	world.add(make_shared<Triangle>(point(0.0f, 1.0f, -1.0f), point(2.0f, 2.0f, -1.0f), point(2.0f, 3.0f, -1.0f), make_shared<Lambertian>(rgb(1.0f, 0.0f, 0.4f))));
+	world.add(make_shared<Triangle>(point(-2.0f, 1.0f, -1.0f), point(0.0f, 2.0f, -1.0f), point(0.0f, 3.0f, -1.0f), make_shared<Lambertian>(rgb(0.2f, 0.3f, 0.4f))));
 
 	auto start = std::chrono::high_resolution_clock::now();
 

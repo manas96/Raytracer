@@ -3,35 +3,26 @@
 // Using a negative radius makes the normals point inwards, resulting in a transparent surface
 
 bool Dielectric::scatter(const Ray& rayIn, const hitRecord& record, rgb& attenuation, Ray& scattered) const {
-	vec3 outwardNormal;
-	vec3 reflected = mathStuff::reflect(rayIn.direction(), record.normal);
-	float ni_over_nt;
-	attenuation = rgb(1, 1, 1);	// Attenuation is always 1 for dielectrics : no RGB channel is absorbed		
-	vec3 refracted;
-	float reflectProb;
-	float cosine;
-
-	if (glm::dot(rayIn.direction(), record.normal) > 0) { //if incoming ray is not parallel to the surface of incidence / if not total internal reflection
-		outwardNormal = -record.normal;
-		ni_over_nt = refractiveIdx;
-		cosine = refractiveIdx * glm::dot(rayIn.direction(), record.normal) / glm::length(rayIn.direction());
-	}
-	else {
-		outwardNormal = record.normal;
-		ni_over_nt = 1.0f / refractiveIdx;
-		cosine = -glm::dot(rayIn.direction(), record.normal) / glm::length(rayIn.direction());
-	}
-	if (mathStuff::refract(rayIn.direction(), outwardNormal, ni_over_nt, refracted)) {
-		reflectProb = mathStuff::schick(cosine, refractiveIdx);
-	}
-	else {
-		reflectProb = 1.0f;
-	}
-	if (mathStuff::getRand() < reflectProb) {
+	
+	attenuation = rgb(1.0f, 1.0f, 1.0f);	// perfect dielectric, absorbs no wavelength
+	float etai_over_etat = (record.frontFace) ? (1.0f / refractiveIdx) : (refractiveIdx);
+	
+	vec3 unitDirection = glm::normalize(rayIn.direction());
+	float cosTheta = mathStuff::ffmin(glm::dot(-unitDirection, record.normal), 1.0f);
+	double sinTheta = sqrt(1.0f - cosTheta * cosTheta);
+	
+	if (etai_over_etat * sinTheta > 1.0f) { // if total internal reflection happens
+		vec3 reflected = mathStuff::reflect(unitDirection, record.normal);
 		scattered = Ray(record.p, reflected);
+		return true;
 	}
-	else {
-		scattered = Ray(record.p, refracted);
+	double reflect_probability = mathStuff::schick(cosTheta, etai_over_etat);
+	if (mathStuff::getRand() < reflect_probability) { // TODO combine this with earlier condition
+		vec3 reflected = mathStuff::reflect(unitDirection, record.normal);
+		scattered = Ray(record.p, reflected);
+		return true;
 	}
+	vec3 refracted = mathStuff::refract(unitDirection, record.normal, etai_over_etat);
+	scattered = Ray(record.p, refracted);
 	return true;
 }

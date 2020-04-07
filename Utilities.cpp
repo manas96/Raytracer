@@ -23,8 +23,8 @@ float mathStuff::squish(float t, float min, float max) {
 	return (t - min) / (max - min);
 }
 
-vec3 mathStuff::reflect(const vec3& v, const vec3 normal) {
-	return v - 2.0f * glm::dot(v, normal) * normal;
+vec3 mathStuff::reflect(const vec3& incoming, const vec3 normal) {
+	return incoming - 2.0f * glm::dot(incoming, normal) * normal;
 }
 
 float mathStuff::getRand() {
@@ -63,16 +63,12 @@ point mathStuff::randomInUnitSphere() {
 }
 
 // see wikipedia for equation explanation
-bool mathStuff::refract(const vec3& v, const vec3& n, float ni_over_nt, vec3& refracted) {
-	vec3 uv = glm::normalize(v);
-	float dt = glm::dot(uv, n);
-	float discriminant = 1.0f - ni_over_nt * ni_over_nt * (1 - dt * dt);
-	if (discriminant > 0) {
-		refracted = ni_over_nt * (uv - n * dt) - n * (float)sqrt(discriminant);
-		return true;
-	}
-	else
-		return false;
+vec3 mathStuff::refract(const vec3& incoming, const vec3& normal, float etai_over_etat) {
+	using namespace glm;
+	float cosTheta = dot(-incoming, normal);
+	vec3 refractedOutParallel = etai_over_etat * (incoming + cosTheta * normal);
+	vec3 refractedOutPerpendicular = -sqrt(1.0f - dot(refractedOutParallel, refractedOutParallel)) * normal;
+	return refractedOutParallel + refractedOutPerpendicular;
 }
 
 float mathStuff::schick(float cosine, float refIdx) {
