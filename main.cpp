@@ -18,6 +18,7 @@
 #include "Triangle.h"
 #include "Dielectric.h"
 #include "Vec3aliases.h"
+#include "Aabb.h"
 constexpr int MAX_REFLECTS = 50;
 constexpr float TMIN = 0.001f;
 constexpr float TMAX = FLT_MAX;
@@ -49,7 +50,6 @@ vec3 ray_color(const Ray &r, const Hitable& world, int depth) {
 }
 
 int main() { 
-
 	using std::make_shared;
 	using namespace mathStuff;
 
