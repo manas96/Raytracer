@@ -53,9 +53,9 @@ int main() {
 	using std::make_shared;
 	using namespace mathStuff;
 
-	int nx = 2048;			//width
-	int ny = 1080;			//height
-	int ns = 1000;			//number of samples to take within each pixle. increase for better antialiasing 
+	int nx = 200;			//width
+	int ny = 100;			//height
+	int ns = 100;			//number of samples to take within each pixle. increase for better antialiasing 
 
 	vec3 lookFrom(3.0, 3.0, 2.0);
 	vec3 lookAt(0.0, 0.0, -1.0);

@@ -10,7 +10,7 @@ public:
 	vec3 horizontal;
 	vec3 vertical;
 	float lensRadius;
-	vec3 u, v, w;
+	vec3 u, v, w;	// orthonormal basis to fully describe camera position
 
 			//verticalFOV is in degrees
 	Camera(point lookFrom, point lookAt, vec3 vUp, float  verticalFov, float aspectRatio, float apeture, float focusDist);
