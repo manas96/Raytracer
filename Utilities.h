@@ -26,7 +26,10 @@ namespace mathStuff {
 	}
 
 	inline float ffmin(float a, float b) { return a <= b ? a : b; }
+	inline float ffmin(float a, float b, float c) { return ffmin(ffmin(a, b), c); }
+
 	inline float ffmax(float a, float b) { return a >= b ? a : b; }
+	inline float ffmax(float a, float b, float c) { return ffmax(ffmax(a, b), c); }
 
 	// clamps x to [min,max]
 	inline float clamp(float x, float min, float max) {

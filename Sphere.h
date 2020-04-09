@@ -12,7 +12,7 @@ public:
 
 	Sphere(vec3 c, float r, std::shared_ptr<Material> m) : center(c), radius(r), material(m) {};
 	
-	//tMin and tMax are used to define valid range for calculations to avoid float inaccuracies.
 	bool hit(const Ray& r, float tMin, float tMax, hitRecord& rec) const override;
+	bool boundingBox(Aabb& outputBox) const override;
 };
 

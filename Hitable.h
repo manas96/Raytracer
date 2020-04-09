@@ -3,7 +3,9 @@
 #include "glm/vec3.hpp"
 #include "glm/geometric.hpp"
 #include "Vec3aliases.h"
+#include "Aabb.h"
 #include <memory>
+
 // forward declaration 
 class Material;
 
@@ -22,5 +24,8 @@ struct hitRecord {
 
 class Hitable {
 public:
+
+	//tMin and tMax are used to define valid range for calculations to avoid float inaccuracies.
 	virtual bool hit(const Ray& r, float tMin, float tMax, hitRecord& rec) const = 0;
+	virtual bool boundingBox(Aabb& outputBox) const = 0;	// returns if hitable has an AABB
 };

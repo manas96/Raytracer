@@ -2,7 +2,7 @@
 
 // an implementation of the Moller Trumbore algorithm from 
 // https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/moller-trumbore-ray-triangle-intersection
-// TODO verify with wikipedia algorithm, some blurring occurs around one triangle vertex
+// TODO verify with wikipedia algorithm, some blurring occurs around one triangle vertex is observed
 bool Triangle::hit(const Ray& r, float tMin, float tMax, hitRecord& rec) const {
     using namespace glm;
     
@@ -34,3 +34,19 @@ bool Triangle::hit(const Ray& r, float tMin, float tMax, hitRecord& rec) const {
 
     return true; 
 }
+
+// TODO verify
+bool Triangle::boundingBox(Aabb& outputBox) const {
+    using namespace mathStuff;
+    point min(
+                ffmin(v0.x, v1.x, v2.x),
+                ffmin(v0.y, v1.y, v2.y),
+                ffmin(v0.z, v1.z, v2.z));
+    point max(
+                ffmax(v0.x, v1.x, v2.x),
+                ffmax(v0.y, v1.y, v2.y),
+                ffmax(v0.z, v1.z, v2.z));
+    outputBox = Aabb(min, max);
+    return true;
+}
+

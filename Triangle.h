@@ -13,4 +13,5 @@ class Triangle : public Hitable
      {}
 
     bool hit(const Ray& r, float tMin, float tMax, hitRecord& rec) const override;
+    bool boundingBox(Aabb& outputBox) const override;
 };
