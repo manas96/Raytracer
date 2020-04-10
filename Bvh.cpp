@@ -40,6 +40,27 @@ BvhNode::BvhNode(std::vector<std::shared_ptr<Hitable>>& objects,
     box = Aabb::surroundingBox(box_left, box_right);
 }
 
+bool BvhNode::boxCompare(const std::shared_ptr<Hitable> a, const std::shared_ptr<Hitable> b, int axis) {
+    Aabb boxA;
+    Aabb boxB;
+
+    if (!a->boundingBox(boxA) || !b->boundingBox(boxB))
+        std::cout << "No bounding box in bvh_node constructor.\n";
+
+    return boxA.min[axis] < boxB.min[axis];
+}
+
+bool BvhNode::boxXCompare(const std::shared_ptr<Hitable> a, const std::shared_ptr<Hitable> b) {
+    return BvhNode::boxCompare(a, b, 0);
+}
+
+bool BvhNode::boxYCompare(const std::shared_ptr<Hitable> a, const std::shared_ptr<Hitable> b) {
+    return BvhNode::boxCompare(a, b, 1);
+}
+
+bool BvhNode::boxZCompare(const std::shared_ptr<Hitable> a, const std::shared_ptr<Hitable> b) {
+    return BvhNode::boxCompare(a, b, 2);
+}
 bool BvhNode::hit(const Ray& r, float tMin, float tMax, hitRecord& record) const {
 	if (!box.hit(r, tMin, tMax)) return false;
 

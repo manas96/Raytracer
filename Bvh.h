@@ -1,3 +1,4 @@
+#pragma once
 #include "Vec3aliases.h"
 #include "Hitable.h"
 #include "Vec3aliases.h"
@@ -23,26 +24,9 @@ public:
 	virtual bool hit(const Ray& r, float tMin, float tMax, hitRecord& record) const override;
 
 	virtual bool boundingBox(Aabb& outputBox) const override;
+private:
+	static bool boxCompare(const std::shared_ptr<Hitable> a, const std::shared_ptr<Hitable> b, int axis);
+	static bool boxXCompare(const std::shared_ptr<Hitable> a, const std::shared_ptr<Hitable> b);
+	static bool boxYCompare(const std::shared_ptr<Hitable> a, const std::shared_ptr<Hitable> b);
+	static bool boxZCompare(const std::shared_ptr<Hitable> a, const std::shared_ptr<Hitable> b);
 };
-
-inline bool boxCompare(const std::shared_ptr<Hitable> a, const std::shared_ptr<Hitable> b, int axis) {
-	Aabb boxA;
-	Aabb boxB;
-
-	if (!a->boundingBox(boxA) || !b->boundingBox(boxB))
-		std::cout << "No bounding box in bvh_node constructor.\n";
-
-	return boxA.min[axis] < boxB.min[axis];
-}
-
-bool boxXCompare(const std::shared_ptr<Hitable> a, const std::shared_ptr<Hitable> b) {
-	return boxCompare(a, b, 0);
-}
-
-bool boxYCompare(const std::shared_ptr<Hitable> a, const std::shared_ptr<Hitable> b) {
-	return boxCompare(a, b, 1);
-}
-
-bool boxZCompare(const std::shared_ptr<Hitable> a, const std::shared_ptr<Hitable> b) {
-	return boxCompare(a, b, 2);
-}

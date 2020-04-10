@@ -1,6 +1,7 @@
 #pragma once
 #include "Vec3aliases.h"
 #include "Ray.h"
+#pragma once
 #include "Utilities.h"
 
 class Aabb {
