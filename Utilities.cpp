@@ -33,8 +33,13 @@ float mathStuff::getRand() {
 }
 
 float mathStuff::getRand(float min, float max) {
-	static std::uniform_real_distribution<float> distr(min, max); // exclusive of max
+	// TODO this is not efficient
+	std::uniform_real_distribution<float> distr(min, max); // exclusive of max
 	return distr(generator);
+}
+
+int mathStuff::getRandInt(int min, int max) {
+	return static_cast<int>(getRand(min, max + 1));
 }
 
 vec3 mathStuff::randomInUnitDisk() {

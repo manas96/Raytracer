@@ -25,7 +25,7 @@ bool HitableList::boundingBox(Aabb& outputBox) const {
 	outputBox = tempBox;
 	for (const auto& object : objects) {
 		if (!object->boundingBox(tempBox)) return false;
-		outputBox = surroundingBox(outputBox, tempBox);
+		outputBox = Aabb::surroundingBox(outputBox, tempBox);
 	}
 	return true;
 }
