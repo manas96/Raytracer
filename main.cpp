@@ -1,3 +1,4 @@
+#pragma warning(disable : 26454)
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -19,6 +20,8 @@
 #include "Dielectric.h"
 #include "Vec3aliases.h"
 #include "Bvh.h"
+#include "TaskClock.h"
+
 constexpr int MAX_REFLECTS = 50;
 constexpr float TMIN = 0.001f;
 constexpr float TMAX = FLT_MAX;
@@ -49,6 +52,87 @@ vec3 ray_color(const Ray &r, const Hitable& world, int depth) {
 	}
 }
 
+void saveImage(std::vector<uint8_t> image, int nx, int ny, int ns) {
+	std::ofstream  raytracedImage;
+	std::ostringstream file;
+	file << nx << " x " << ny << "_pixelAverage_" << ns << "_reflects_" << MAX_REFLECTS << ".ppm";
+	std::cout << "Creating output file : " << file.str() << '\n';
+	raytracedImage.open(file.str());
+	raytracedImage << "P3\n" << nx << " " << ny << "\n255\n";
+
+	for (int j = ny - 1; j >= 0; j--) {
+		for (int i = 0; i < nx; ++i) {
+			raytracedImage << static_cast<int>(image[3 * (j * nx + i) + 0]) << " ";
+			raytracedImage << static_cast<int>(image[3 * (j * nx + i) + 1]) << " ";
+			raytracedImage << static_cast<int>(image[3 * (j * nx + i) + 2]) << '\n';
+		}
+	}
+	raytracedImage.close();
+}
+
+int main() { 
+	using std::make_shared;
+	using namespace mathStuff;
+	TaskClock taskClock;
+
+	int nx = 640;			//width
+	int ny = 480;			//height
+	int ns = 1;			//number of samples to take within each pixle. increase for better antialiasing 
+
+	vec3 lookFrom(3.0, 3.0, 2.0);
+	vec3 lookAt(0.0, 0.0, -1.0);
+	vec3 vUp(0.0,1.0,0.0);
+	float distToFocus = glm::length(lookFrom - lookAt);
+	float aperture = 0.1f;
+	Camera camera(lookFrom, lookAt, vUp, 90, float(nx) / float(ny), aperture, distToFocus);
+
+	HitableList world;
+	world.add(make_shared<Sphere>(point(0.0f, -100.5f, -1.0f), 100.0f, make_shared<Lambertian>(rgb(0.8f, 0.8f, 0.0f))));		// ground sphere
+	world.add(make_shared<Sphere>(point(1.0f, 0.0f, -1.0f), 0.5f, make_shared<Metal>(rgb(0.2f, 0.8f, 0.2f), 0.0f)));
+	world.add(make_shared<Sphere>(point(-2.0f, 1.0f, 1.0f), 1.0f, make_shared<Metal>(rgb(1.0f, 0.2f, 0.7f), 0.0f)));
+	world.add(make_shared<Sphere>(point(-1.0f, 0.0f, -1.0f), 0.5f, make_shared<Dielectric>(1.5f)));
+	world.add(make_shared<Sphere>(point(-1.0f, 0.0f, -1.0f), -0.45f, make_shared<Dielectric>(1.5f)));
+	world.add(make_shared<Sphere>(point(0.0f, .0f, -1.0f), -0.5f, make_shared<Dielectric>(1.7f)));
+
+	world.add(make_shared<Triangle>(point(0.0f, 1.0f, -1.0f), point(2.0f, 2.0f, -1.0f), point(2.0f, 3.0f, -1.0f), make_shared<Lambertian>(rgb(1.0f, 0.0f, 0.4f))));
+	world.add(make_shared<Triangle>(point(-2.0f, 1.0f, -1.0f), point(0.0f, 2.0f, -1.0f), point(0.0f, 3.0f, -1.0f), make_shared<Lambertian>(rgb(0.2f, 0.3f, 0.4f))));
+	BvhNode bvhRoot(world);
+	//BvhNode bvhRoot(randomScene());
+
+	std::vector<uint8_t> image(nx * ny * 3); // width * height * 3 RGB channels
+	
+	taskClock.start("rendering");
+	for (int j = ny - 1; j >= 0; j--) {
+		for (int i = 0; i < nx; i++) {		
+			//std::cout << "Currently on pixel (" << i << ", "<< j << ")";	// slows processing, should not be used
+			rgb col(0, 0, 0);
+			for (int s = 0; s < ns; s++) {
+				float u = float(i + getRand()) / float(nx);
+				float v = float(j + getRand()) / float(ny);
+				Ray r = camera.getRay(u, v);
+				point p = r.pointAtParameter(2.0);
+				col += ray_color(r, world, 0);
+			}
+			col /= float(ns);
+			col = rgb(sqrt(col.r), sqrt(col.g), sqrt(col.b));	// gamma correction : TODO optimize later
+			// get color values between [0,255] TODO use openGL to display in real time
+			image[3 * (j*nx + i) + 0] = static_cast<int>(256 * clamp(col.r, 0.0f, 0.999f));
+			image[3 * (j*nx + i) + 1] = static_cast<int>(256 * clamp(col.g, 0.0f, 0.999f));
+			image[3 * (j*nx + i) + 2] = static_cast<int>(256 * clamp(col.b, 0.0f, 0.999f));
+		}
+	}
+	taskClock.end();
+	taskClock.start("file writing");
+	saveImage(image, nx, ny, ns);
+	taskClock.end();
+	return 0;
+}
+/* TODO
+Read settings from file at runtime
+parallelize 
+*/
+
+/*
 HitableList randomScene() {
 	// with BVH = 80 seconds	200X100X100 (W X H X SPP)
 	// with BVH = y14341 seconds 640x480x1000
@@ -74,8 +158,8 @@ HitableList randomScene() {
 					// metal
 					vec3 albedo = randomVec3(.5f, 1.0f);
 					float fuzz = getRand(0.0f, 0.5f);
-					world.add(
-						make_shared<Sphere>(center, 0.2f, make_shared<Metal>(albedo, fuzz)));
+					world.add(make_shared<Sphere>(center, 0.2f, make_shared<Metal>(albedo, fuzz)));
+					//world.add(make_shared<Triangle>(center + randomVec3(), center + randomVec3(), center + randomVec3(), make_shared<Metal>(albedo, fuzz)));
 				}
 				else {
 					// glass
@@ -94,73 +178,5 @@ HitableList randomScene() {
 	return world;
 }
 
-int main() { 
-	using std::make_shared;
-	using namespace mathStuff;
 
-	int nx = 640;			//width
-	int ny = 480;			//height
-	int ns = 1000;			//number of samples to take within each pixle. increase for better antialiasing 
-
-	vec3 lookFrom(3.0, 3.0, 2.0);
-	vec3 lookAt(0.0, 0.0, -1.0);
-	vec3 vUp(0.0,1.0,0.0);
-	float distToFocus = glm::length(lookFrom - lookAt);
-	float aperture = 0.1f;
-	Camera camera(lookFrom, lookAt, vUp, 90, float(nx) / float(ny), aperture, distToFocus);
-
-	std::ofstream  raytracedImage;
-	std::ostringstream file;
-	file << nx << " x " << ny << "_pixelAverage_" << ns << "_reflects_"<< MAX_REFLECTS << ".ppm";
-	std::cout << "Creating output file : " << file.str() << '\n';
-	raytracedImage.open(file.str());
-	raytracedImage << "P3\n" << nx << " " << ny << "\n255\n";
-
-	//HitableList world;
-	//world.add(make_shared<Sphere>(point(0.0f, -100.5f, -1.0f), 100.0f, make_shared<Lambertian>(rgb(0.8f, 0.8f, 0.0f))));		// ground sphere
-	//world.add(make_shared<Sphere>(point(1.0f, 0.0f, -1.0f), 0.5f, make_shared<Metal>(rgb(0.2f, 0.8f, 0.2f), 0.0f)));
-	//world.add(make_shared<Sphere>(point(-2.0f, 1.0f, 1.0f), 1.0f, make_shared<Metal>(rgb(1.0f, 0.2f, 0.7f), 0.0f)));
-	//world.add(make_shared<Sphere>(point(-1.0f, 0.0f, -1.0f), 0.5f, make_shared<Dielectric>(1.5f)));
-	//world.add(make_shared<Sphere>(point(-1.0f, 0.0f, -1.0f), -0.45f, make_shared<Dielectric>(1.5f)));
-	//world.add(make_shared<Sphere>(point(0.0f, .0f, -1.0f), -0.5f, make_shared<Dielectric>(1.7f)));
-
-	//world.add(make_shared<Triangle>(point(0.0f, 1.0f, -1.0f), point(2.0f, 2.0f, -1.0f), point(2.0f, 3.0f, -1.0f), make_shared<Lambertian>(rgb(1.0f, 0.0f, 0.4f))));
-	//world.add(make_shared<Triangle>(point(-2.0f, 1.0f, -1.0f), point(0.0f, 2.0f, -1.0f), point(0.0f, 3.0f, -1.0f), make_shared<Lambertian>(rgb(0.2f, 0.3f, 0.4f))));
-	//BvhNode bvhRoot(world);
-	BvhNode bvhRoot(randomScene());
-	auto start = std::chrono::high_resolution_clock::now();
-
-	for (int j = ny - 1; j >= 0; j--) {
-		for (int i = 0; i < nx; i++) {		
-			//std::cout << "Currently on pixel (" << i << ", "<< j << ")";	// slows processing, should not be used
-			rgb col(0, 0, 0);
-			for (int s = 0; s < ns; s++) {
-				float u = float(i + getRand()) / float(nx);
-				float v = float(j + getRand()) / float(ny);
-				Ray r = camera.getRay(u, v);
-				point p = r.pointAtParameter(2.0);
-				col += ray_color(r, bvhRoot, 0);
-			}
-			col /= float(ns);
-			col = rgb(sqrt(col.r), sqrt(col.g), sqrt(col.b));	// gamma correction : TODO optimize later
-			// get color values between [0,255] TODO use openGL to display in real time
-			int ir = static_cast<int>(256 * clamp(col.r, 0.0f, 0.999f));
-			int ig = static_cast<int>(256 * clamp(col.g, 0.0f, 0.999f));
-			int ib = static_cast<int>(256 * clamp(col.b, 0.0f, 0.999f));
-
-			raytracedImage << ir << " " << ig << " " << ib << "\n";
-		}
-	}
-	raytracedImage.close();
-	auto end = std::chrono::high_resolution_clock::now();
-	auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - start);
-	std::cout << "Render time : " << duration.count() << " seconds." << std::endl;
-
-	return 0;
-}
-/* TODO
-Read settings from file at runtime
-parallelize 
-implement BVH
 */
-
