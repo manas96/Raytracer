@@ -11,5 +11,5 @@ Implemented from the theory I studied in Peter Shirley's Ray Tracing booklet.
 - [ ] Study [PBRT's](https://www.pbrt.org/) architecture.
 - [ ] Study/contribute to the Mitsuba renderer.
 
-### Example output : diffuse, dielectric and metallic materials
-![Example output : diffuse, dielectric and metallic materials](https://github.com/manas96/Raytracer/blob/master/b1024%20x%20768_pixelAverage_1000_reflects_50.jpg)
+### Example output : diffuse, dielectric and metallic materials with triangle primitives
+![Example output : diffuse, dielectric and metallic materials](https://github.com/manas96/Raytracer/blob/master/demo.jpg)
