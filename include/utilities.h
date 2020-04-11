@@ -1,8 +1,8 @@
 #pragma once
-#include "glm/vec3.hpp"
-#include "glm/geometric.hpp"
+#include <glm/vec3.hpp>
+#include <glm/geometric.hpp>
 #include <random>
-#include "Vec3aliases.h"
+#include <vec3aliases.h>
 
 constexpr float PI = 3.14159265358979323846f;
 

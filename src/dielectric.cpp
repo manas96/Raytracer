@@ -1,4 +1,4 @@
-#include "Dielectric.h"
+#include <dielectric.h>
 
 // Using a negative radius makes the normals point inwards, resulting in a transparent surface
 

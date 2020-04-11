@@ -1,9 +1,9 @@
 #pragma once
-#include "Ray.h"
-#include "Hitable.h"
-#include "glm/geometric.hpp"
-#include "Utilities.h"
-#include "Vec3aliases.h"
+#include <ray.h>
+#include <hitable.h>
+#include <glm/geometric.hpp>
+#include <utilities.h>
+#include <vec3aliases.h>
 
 class Material {
 public : 

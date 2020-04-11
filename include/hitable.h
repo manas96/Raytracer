@@ -1,9 +1,9 @@
 #pragma once
-#include "Ray.h"
-#include "glm/vec3.hpp"
-#include "glm/geometric.hpp"
-#include "Vec3aliases.h"
-#include "Aabb.h"
+#include <ray.h>
+#include <glm/vec3.hpp>
+#include <glm/geometric.hpp>
+#include <vec3aliases.h>
+#include <aabb.h>
 #include <memory>
 
 // forward declaration 

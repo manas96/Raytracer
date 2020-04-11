@@ -1,10 +1,9 @@
 #pragma once
-#include "Vec3aliases.h"
-#include "Hitable.h"
-#include "Vec3aliases.h"
-#include "HitableList.h"
-#include "Ray.h"
-#include "Aabb.h"
+#include <hitable.h>
+#include <vec3aliases.h>
+#include <hitableList.h>
+#include <ray.h>
+#include <aabb.h>
 #include <iostream>
 
 

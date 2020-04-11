@@ -1,5 +1,4 @@
-#include "Metal.h"
-
+#include <metal.h>
 
 bool Metal::scatter(const Ray& rayIn, const hitRecord& record, rgb& attenuation, Ray& scattered) const {
 	vec3 reflected = mathStuff::reflect(glm::normalize(rayIn.direction()), record.normal);

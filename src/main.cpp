@@ -5,28 +5,27 @@
 #include <sstream>
 #include <float.h>
 #include <omp.h>
-#include "glm/vec3.hpp"
-#include "glm/geometric.hpp"
+#include <glm/vec3.hpp>
+#include <glm/geometric.hpp>
 #include <chrono>
-#include "Ray.h"
-#include "Utilities.h"
-#include "Sphere.h"
-#include "HitableList.h"
-#include "Hitable.h"
-#include "Camera.h"
-#include "Material.h"
-#include "Lambertian.h"
-#include "Metal.h"
-#include "Triangle.h"
-#include "Dielectric.h"
-#include "Vec3aliases.h"
-#include "Bvh.h"
-#include "Timer.h"
+#include <ray.h>
+#include <utilities.h>
+#include <sphere.h>
+#include <hitableList.h>
+#include <hitable.h>
+#include <camera.h>
+#include <material.h>
+#include <lambertian.h>
+#include <metal.h>
+#include <triangle.h>
+#include <dielectric.h>
+#include <vec3aliases.h>
+#include <bvh.h>
+#include <timer.h>
 
 constexpr int MAX_REFLECTS = 50;
 constexpr float TMIN = 0.001f;
 constexpr float TMAX = FLT_MAX;
-
 
 // returns a color for a given ray
 vec3 ray_color(const Ray &r, const Hitable& world, int depth) {

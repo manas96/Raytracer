@@ -1,4 +1,4 @@
-#include "Triangle.h"
+#include <triangle.h>
 
 // an implementation of the Moller Trumbore algorithm from 
 // https://www.scratchapixel.com/lessons/3d-basic-rendering/ray-tracing-rendering-a-triangle/moller-trumbore-ray-triangle-intersection

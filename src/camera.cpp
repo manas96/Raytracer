@@ -1,4 +1,4 @@
-#include "Camera.h"
+#include <camera.h>
 
 Camera::Camera(point lookFrom, point lookAt, vec3 vUp, float  verticalFov, float aspectRatio, float apeture, float focusDist) {
 	lensRadius = apeture / 2;

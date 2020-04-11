@@ -1,4 +1,4 @@
-#include "Bvh.h"
+#include <bvh.h>
 #include <algorithm>
 
 BvhNode::BvhNode(std::vector<std::shared_ptr<Hitable>>& objects,

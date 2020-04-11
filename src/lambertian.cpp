@@ -1,4 +1,4 @@
-#include "Lambertian.h"
+#include <lambertian.h>
  
 bool Lambertian::scatter(const Ray& rayIn, const hitRecord& record, vec3& attenuation, Ray& scattered) const {
 

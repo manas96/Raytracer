@@ -1,6 +1,6 @@
 #pragma once
-#include "glm/vec3.hpp"
-#include "Vec3aliases.h"
+#include <glm/vec3.hpp>
+#include <vec3aliases.h>
 class Ray
 {
 public:

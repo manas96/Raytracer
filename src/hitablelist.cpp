@@ -1,4 +1,4 @@
-#include "HitableList.h"
+#include <hitableList.h>
 
 bool HitableList::hit(const Ray& r, float tMin, float tMax, hitRecord& record) const {
 	hitRecord tempRecord;

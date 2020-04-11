@@ -1,6 +1,6 @@
 #pragma once
-#include "Hitable.h"
-#include "Material.h"
+#include <hitable.h>
+#include <material.h>
 #include <memory>
 
 class Sphere : public Hitable
