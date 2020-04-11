@@ -1,13 +1,19 @@
 # Raytracer
 
-A (backwards) raytracer I wrote for learning. Note that is purely CPU and I have not attempted to optimize this in any way, as that was not my goal. Used VS2019 to compile. 
+A (backwards) raytracer I wrote for learning. 
 
 Using GLM for vector math.
+Using CMake for building and portability.
+Using OpenMP for parallelization.
 
-Implemented from the theory I studied in Peter Shirley's Ray Tracing booklet.
+References used : 
+[Peter Shirley's Raytracing Series](https://www.realtimerendering.com/raytracing/Ray%20Tracing%20in%20a%20Weekend.pdf)
+[PBRT](http://www.pbr-book.org/)
+[Scratchapixel](https://www.scratchapixel.com/)
+
 ## TODO : 
-- [X] Implement Bounding volume hierarchies.
-- [ ] Parallelize.
+- [X] Implement Bounding Volume Hierarchies.
+- [X] Parallelize.
 - [ ] Study [PBRT's](https://www.pbrt.org/) architecture.
 - [ ] Study/contribute to the Mitsuba renderer.
 

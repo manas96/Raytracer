@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include <float.h>
+#include <omp.h>
 #include "glm/vec3.hpp"
 #include "glm/geometric.hpp"
 #include <chrono>
@@ -77,7 +78,7 @@ int main() {
 
 	int nx = 640;			//width
 	int ny = 480;			//height
-	int ns = 1;			//number of samples to take within each pixle. increase for better antialiasing 
+	int ns = 10;			//number of samples to take within each pixle. increase for better antialiasing 
 
 	vec3 lookFrom(3.0, 3.0, 2.0);
 	vec3 lookAt(0.0, 0.0, -1.0);
@@ -102,6 +103,7 @@ int main() {
 	std::vector<uint8_t> image(nx * ny * 3); // width * height * 3 RGB channels
 	
 	taskClock.start("rendering");
+	#pragma omp parallel for collapse(2)
 	for (int j = ny - 1; j >= 0; j--) {
 		for (int i = 0; i < nx; i++) {		
 			//std::cout << "Currently on pixel (" << i << ", "<< j << ")";	// slows processing, should not be used
@@ -129,7 +131,6 @@ int main() {
 }
 /* TODO
 Read settings from file at runtime
-parallelize 
 */
 
 /*
