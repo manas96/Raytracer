@@ -3,10 +3,10 @@
 #include <string>
 #include <iostream>
 
-class TaskClock {
+class Timer {
 public:
 
-	TaskClock() {}
+	Timer() {}
 
 	inline void start(std::string taskName) {
 		task = taskName;

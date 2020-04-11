@@ -21,7 +21,7 @@
 #include "Dielectric.h"
 #include "Vec3aliases.h"
 #include "Bvh.h"
-#include "TaskClock.h"
+#include "Timer.h"
 
 constexpr int MAX_REFLECTS = 50;
 constexpr float TMIN = 0.001f;
@@ -74,7 +74,7 @@ void saveImage(std::vector<uint8_t> image, int nx, int ny, int ns) {
 int main() { 
 	using std::make_shared;
 	using namespace mathStuff;
-	TaskClock taskClock;
+	Timer timer;
 
 	int nx = 640;			//width
 	int ny = 480;			//height
@@ -102,7 +102,7 @@ int main() {
 
 	std::vector<uint8_t> image(nx * ny * 3); // width * height * 3 RGB channels
 	
-	taskClock.start("rendering");
+	timer.start("rendering");
 	#pragma omp parallel for collapse(2)
 	for (int j = ny - 1; j >= 0; j--) {
 		for (int i = 0; i < nx; i++) {		
@@ -123,10 +123,10 @@ int main() {
 			image[3 * (j*nx + i) + 2] = static_cast<int>(256 * clamp(col.b, 0.0f, 0.999f));
 		}
 	}
-	taskClock.end();
-	taskClock.start("file writing");
+	timer.end();
+	timer.start("file writing");
 	saveImage(image, nx, ny, ns);
-	taskClock.end();
+	timer.end();
 	return 0;
 }
 /* TODO
