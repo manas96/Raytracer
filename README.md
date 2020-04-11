@@ -6,8 +6,8 @@ Using GLM for vector math.
 
 Implemented from the theory I studied in Peter Shirley's Ray Tracing booklet.
 ## TODO : 
-- [ ] Implement Bounding volume hierarchies.
-- [ ] Parallelize once I am confident in basic theory.
+- [X] Implement Bounding volume hierarchies.
+- [ ] Parallelize.
 - [ ] Study [PBRT's](https://www.pbrt.org/) architecture.
 - [ ] Study/contribute to the Mitsuba renderer.
 
