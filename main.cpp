@@ -50,7 +50,8 @@ vec3 ray_color(const Ray &r, const Hitable& world, int depth) {
 }
 
 HitableList randomScene() {
-	// with BVH = 80 seconds
+	// with BVH = 80 seconds	200X100X100 (W X H X SPP)
+	// with BVH = y14341 seconds 640x480x1000
 	HitableList world;
 	using std::make_shared;
 	using namespace mathStuff;
@@ -86,11 +87,9 @@ HitableList randomScene() {
 
 	world.add(make_shared<Sphere>(vec3(0.0f, 1.0f, 0.0f), 1.0f, make_shared<Dielectric>(1.5f)));
 
-	world.add(
-		make_shared<Sphere>(vec3(-4.0f, 1.0f, 0.0f), 1.0f, make_shared<Lambertian>(vec3(0.4f, 0.2f, 0.1f))));
+	world.add(make_shared<Sphere>(vec3(-4.0f, 1.0f, 0.0f), 1.0f, make_shared<Lambertian>(vec3(0.4f, 0.2f, 0.1f))));
 
-	world.add(
-		make_shared<Sphere>(vec3(4.0f, 1.0f, 0.0f), 1.0f, make_shared<Metal>(vec3(0.7f, 0.6f, 0.5f), 0.0f)));
+	world.add(make_shared<Sphere>(vec3(4.0f, 1.0f, 0.0f), 1.0f, make_shared<Metal>(vec3(0.7f, 0.6f, 0.5f), 0.0f)));
 
 	return world;
 }
