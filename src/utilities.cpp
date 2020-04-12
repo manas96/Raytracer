@@ -50,8 +50,7 @@ vec3 mathStuff::randomInUnitDisk() {
 	return p;
 }
 
-// TODO understand how this is better than randomInUnitSphere()?
-//TODO optimize, this is slower than randomInUnitSphere()
+// https://en.wikipedia.org/wiki/Lambert%27s_cosine_law
 vec3 mathStuff::randomUnitVector() {
 	float a = getRand(0.0f, 2.0f * PI);
 	float z = getRand(-1.0f, 1.0f);
