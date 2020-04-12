@@ -1,19 +1,19 @@
 #include <utilities.h>
 
 namespace color {
-	rgb RED(1.0, 0.0, 0.0);
-	rgb GREEN(0.0, 1.0, 0.0);
-	rgb BLUE(0.0, 0.0, 1.0);
-	rgb WHITE(1.0, 1.0, 1.0);
-	rgb BLACK(0.0, 0.0, 0.0);
-	rgb LIGHTBLUE(0.5, 0.7, 1.0);
+	rgb RED(1.0f, 0.0f, 0.0f);
+	rgb GREEN(0.0f, 1.0f, 0.0f);
+	rgb BLUE(0.0f, 0.0f, 1.0f);
+	rgb WHITE(1.0f, 1.0f, 1.0f);
+	rgb BLACK(0.0f, 0.0f, 0.0f);
+	rgb YELLOW(1.0f, 1.0f, 0.0f);
+	rgb LIGHTBLUE(0.5f, 0.7f, 1.0f);
 }
 
 namespace mathStuff {
 	std::random_device randDevice;
 	std::mt19937 generator(randDevice());
 }
-
 
 vec3 mathStuff::lerp(vec3 start, vec3 end, float howMuch) {
 	return (1.0f - howMuch) * start + howMuch * end;

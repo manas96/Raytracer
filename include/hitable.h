@@ -13,6 +13,7 @@ struct hitRecord {
 	float t;		// the "t" parameter of a ray i.e. how far along the ray we are
 	point p;		// point at which ray intersects geometry
 	vec3 normal;
+	float u, v;		// texture coords
 	bool frontFace;
 
 	inline void setFaceNormal(const Ray& r, const vec3& outwardNormal) {

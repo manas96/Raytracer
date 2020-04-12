@@ -12,6 +12,7 @@ namespace color {
 	extern rgb BLUE;
 	extern rgb WHITE;
 	extern rgb BLACK;
+	extern rgb YELLOW;
 	extern rgb LIGHTBLUE;
 }
 

@@ -21,6 +21,7 @@
 #include <dielectric.h>
 #include <vec3aliases.h>
 #include <bvh.h>
+#include <texture.h>
 #include <timer.h>
 
 constexpr int MAX_REFLECTS = 50;
@@ -77,25 +78,27 @@ int main() {
 
 	int nx = 640;			//width
 	int ny = 480;			//height
-	int ns = 10;			//number of samples to take within each pixle. increase for better antialiasing 
+	int ns = 20;			//number of samples to take within each pixle. increase for better antialiasing 
 
 	vec3 lookFrom(3.0, 3.0, 2.0);
 	vec3 lookAt(0.0, 0.0, -1.0);
 	vec3 vUp(0.0,1.0,0.0);
 	float distToFocus = glm::length(lookFrom - lookAt);
-	float aperture = 0.1f;
+	float aperture = 0.01f;
 	Camera camera(lookFrom, lookAt, vUp, 90, float(nx) / float(ny), aperture, distToFocus);
 
 	HitableList world;
-	world.add(make_shared<Sphere>(point(0.0f, -100.5f, -1.0f), 100.0f, make_shared<Lambertian>(rgb(0.8f, 0.8f, 0.0f))));		// ground sphere
+	auto checker = make_shared<CheckerTexture>(make_shared<ConstantTexture>(rgb(0.2, 0.3, 0.1)), make_shared<ConstantTexture>(rgb(0.9, 0.9, 0.9)));
+	world.add(make_shared<Sphere>(point(0.0f, -100.5f, -1.0f), 100.0f, make_shared<Lambertian>(checker)));		// ground sphere
+
 	world.add(make_shared<Sphere>(point(1.0f, 0.0f, -1.0f), 0.5f, make_shared<Metal>(rgb(0.2f, 0.8f, 0.2f), 0.0f)));
 	world.add(make_shared<Sphere>(point(-2.0f, 1.0f, 1.0f), 1.0f, make_shared<Metal>(rgb(1.0f, 0.2f, 0.7f), 0.0f)));
 	world.add(make_shared<Sphere>(point(-1.0f, 0.0f, -1.0f), 0.5f, make_shared<Dielectric>(1.5f)));
 	world.add(make_shared<Sphere>(point(-1.0f, 0.0f, -1.0f), -0.45f, make_shared<Dielectric>(1.5f)));
 	world.add(make_shared<Sphere>(point(0.0f, .0f, -1.0f), -0.5f, make_shared<Dielectric>(1.7f)));
 
-	world.add(make_shared<Triangle>(point(0.0f, 1.0f, -1.0f), point(2.0f, 2.0f, -1.0f), point(2.0f, 3.0f, -1.0f), make_shared<Lambertian>(rgb(1.0f, 0.0f, 0.4f))));
-	world.add(make_shared<Triangle>(point(-2.0f, 1.0f, -1.0f), point(0.0f, 2.0f, -1.0f), point(0.0f, 3.0f, -1.0f), make_shared<Lambertian>(rgb(0.2f, 0.3f, 0.4f))));
+	world.add(make_shared<Triangle>(point(0.0f, 1.0f, -1.0f), point(2.0f, 2.0f, -1.0f), point(2.0f, 3.0f, -1.0f), make_shared<Lambertian>(make_shared<ConstantTexture>(rgb(1.0f, 0.0f, 0.4f)))));
+	world.add(make_shared<Triangle>(point(-2.0f, 1.0f, -1.0f), point(0.0f, 2.0f, -1.0f), point(0.0f, 3.0f, -1.0f), make_shared<Lambertian>(make_shared<ConstantTexture>(rgb(0.2f, 0.3f, 0.4f)))));
 	BvhNode bvhRoot(world);
 	//BvhNode bvhRoot(randomScene());
 

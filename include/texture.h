@@ -18,3 +18,25 @@ public:
 		return color;
 	}
 };
+
+class CheckerTexture : public Texture {
+public:
+	std::shared_ptr<Texture> odd;
+	std::shared_ptr<Texture> even;
+
+	CheckerTexture() {}
+	CheckerTexture(std::shared_ptr<Texture> e, std::shared_ptr<Texture> o) : even(e), odd(o) {}
+
+	virtual rgb value(float u, float v, const vec3& p) const {
+		auto sines = sin(10.0f * p.x) * sin(10.0f * p.y) * sin(10.0f * p.z);
+		return (sines < 0) ? odd->value(u, v, p) : even->value(u, v, p);
+	}
+
+
+
+
+
+
+
+
+};
