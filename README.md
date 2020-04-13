@@ -2,9 +2,10 @@
 
 A (backwards) raytracer I wrote for learning. 
 
-- Using GLM for vector math.
+- Using [GLM](https://glm.g-truc.net/) for vector math.
 - Using CMake for building and portability.
 - Using OpenMP for parallelization.
+- Using [OneLoneCoder's](http://www.onelonecoder.com/) incredibly helpful [olcPixelGameEngine](https://github.com/OneLoneCoder/olcPixelGameEngine) for display. 
 
 References used : 
 - [Peter Shirley's Raytracing Series](https://www.realtimerendering.com/raytracing/Ray%20Tracing%20in%20a%20Weekend.pdf)

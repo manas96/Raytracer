@@ -3,7 +3,7 @@
 
 class Metal : public Material
 {
-public:
+public:		// TODO add texture to albedo
 	rgb albedo;
 	float fuzz;		// fuzziness, how much the reflection is blurred
 

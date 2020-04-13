@@ -17,7 +17,7 @@ set( SOURCES
     src/main.cpp
 )
 add_executable(raytracer_bin ${SOURCES})
-target_include_directories(raytracer_bin PUBLIC "libs/glm" "include")
+target_include_directories(raytracer_bin PUBLIC "libs/glm" "include" "libs/pge")
 
 find_package(OpenMP)
 if(OpenMP_CXX_FOUND)

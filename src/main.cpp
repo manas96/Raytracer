@@ -23,6 +23,8 @@
 #include <bvh.h>
 #include <texture.h>
 #include <timer.h>
+#include <display/imagedisplay.h>
+#include <thread>
 
 constexpr int MAX_REFLECTS = 50;
 constexpr float TMIN = 0.001f;
@@ -72,13 +74,18 @@ void saveImage(std::vector<uint8_t> image, int nx, int ny, int ns) {
 }
 
 int main() { 
+
 	using std::make_shared;
 	using namespace mathStuff;
 	Timer timer;
 
 	int nx = 640;			//width
 	int ny = 480;			//height
-	int ns = 20;			//number of samples to take within each pixle. increase for better antialiasing 
+	int ns = 100;			//number of samples to take within each pixle. increase for better antialiasing 
+
+	std::vector<uint8_t> image(nx * ny * 3); // width * height * 3 RGB channels
+	ImageDisplay display(nx, ny, &image);
+	auto displayThread = std::thread(&ImageDisplay::startDisplay, &display);
 
 	vec3 lookFrom(3.0, 3.0, 2.0);
 	vec3 lookAt(0.0, 0.0, -1.0);
@@ -101,12 +108,10 @@ int main() {
 	world.add(make_shared<Triangle>(point(-2.0f, 1.0f, -1.0f), point(0.0f, 2.0f, -1.0f), point(0.0f, 3.0f, -1.0f), make_shared<Lambertian>(make_shared<ConstantTexture>(rgb(0.2f, 0.3f, 0.4f)))));
 	BvhNode bvhRoot(world);
 	//BvhNode bvhRoot(randomScene());
-
-	std::vector<uint8_t> image(nx * ny * 3); // width * height * 3 RGB channels
 	
 	timer.start("rendering");
 	#pragma omp parallel for collapse(2)
-	for (int j = ny - 1; j >= 0; j--) {
+	for (int j = 0; j < ny; j++) {
 		for (int i = 0; i < nx; i++) {		
 			//std::cout << "Currently on pixel (" << i << ", "<< j << ")";	// slows processing, should not be used
 			rgb col(0, 0, 0);
@@ -129,6 +134,8 @@ int main() {
 	timer.start("file writing");
 	saveImage(image, nx, ny, ns);
 	timer.end();
+	std::cout << "Close the display window to exit program.\n";
+	displayThread.join();
 	return 0;
 }
 /* TODO
