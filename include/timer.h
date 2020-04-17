@@ -19,7 +19,7 @@ public:
 		auto seconds = std::chrono::duration_cast<std::chrono::seconds>(end - startTime);
 		auto minutes = std::chrono::duration_cast<std::chrono::minutes>(end - startTime);
 		auto hours = std::chrono::duration_cast<std::chrono::hours>(end - startTime);
-		std::cout << task << " took " << seconds.count() << " seconds, " << minutes.count() << " minutes, " << hours.count() << " hours.\n" ;
+		std::cout << task << " took " << seconds.count() << " seconds or " << minutes.count() << " minutes or " << hours.count() << " hours.\n" ;
 	}
 
 private:

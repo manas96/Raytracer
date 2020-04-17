@@ -25,7 +25,7 @@ public:
 
 	bool OnUserUpdate(float fElapsedTime) override
 	{
-		for (int j = 0; j < h; j++)
+		for (int j = h - 1; j >= 0; j--)
 			for (int i = 0; i < w; i++) {
 				int base = 3 * (j * w + i);
 				int r = imageBuffer->at(base + 0);

@@ -25,53 +25,89 @@
 #include <timer.h>
 #include <display/imagedisplay.h>
 #include <thread>
+#include <diffuselight.h>
 
 constexpr int MAX_REFLECTS = 50;
 constexpr float TMIN = 0.001f;
 constexpr float TMAX = FLT_MAX;
 
 // returns a color for a given ray
-vec3 ray_color(const Ray &r, const Hitable& world, int depth) {
+vec3 ray_color(const Ray &r, const rgb background, const Hitable& world, int depth) {
 	using namespace color;
 	hitRecord record;		
 
-	if (world.hit(r, TMIN, FLT_MAX, record)) {
-		Ray scattered;
-		vec3 attenuation;
-		if (depth < MAX_REFLECTS && record.materialPtr->scatter(r, record, attenuation, scattered)) {
-			return attenuation * ray_color(scattered, world, depth + 1);
-		}
-		else {
-			return BLACK;
-		}
-	}
-	else {
-	//generate background gradient
-	vec3 unitDirection = glm::normalize(r.direction());
-	//squish t between 0 and 1
-	float t = 0.5f * (unitDirection.y + 1.0f);		// mathStuff::squish(t, -1, 1);		
-	// lerp according to up/downness	
-	return mathStuff::lerp(WHITE, LIGHTBLUE, t);
-	}
+	if (depth <= 0) return BLACK;
+
+	if (!world.hit(r, TMIN, TMAX, record)) return background;
+
+	Ray scattered;
+	rgb attenuation;
+	rgb emitted = record.materialPtr->emitted(record.u, record.v, record.p);
+	if (!record.materialPtr->scatter(r, record, attenuation, scattered))
+		return emitted;
+
+	return emitted + attenuation * ray_color(scattered, background, world, depth - 1);
+	
+	//if (world.hit(r, TMIN, FLT_MAX, record)) {
+	//	Ray scattered;
+	//	vec3 attenuation;
+	//	if (depth < MAX_REFLECTS && record.materialPtr->scatter(r, record, attenuation, scattered)) {
+	//		return attenuation * ray_color(scattered, world, depth + 1);
+	//	}
+	//	else {
+	//		return BLACK;
+	//	}
+	//}
+	//else {
+	////generate background gradient
+	//vec3 unitDirection = glm::normalize(r.direction());
+	////squish t between 0 and 1
+	//float t = 0.5f * (unitDirection.y + 1.0f);		// mathStuff::squish(t, -1, 1);		
+	//// lerp according to up/downness	
+	//return mathStuff::lerp(WHITE, LIGHTBLUE, t);
+	//}
 }
 
-void saveImage(std::vector<uint8_t> image, int nx, int ny, int ns) {
+void saveImage(std::vector<uint8_t> image, int width, int height, int spp) {
 	std::ofstream  raytracedImage;
 	std::ostringstream file;
-	file << nx << " x " << ny << "_pixelAverage_" << ns << "_reflects_" << MAX_REFLECTS << ".ppm";
+	file << width << " x " << height << "_spp_" << spp << "_reflects_" << MAX_REFLECTS << ".ppm";
 	std::cout << "Creating output file : " << file.str() << '\n';
 	raytracedImage.open(file.str());
-	raytracedImage << "P3\n" << nx << " " << ny << "\n255\n";
+	raytracedImage << "P3\n" << width << " " << height << "\n255\n";
 
-	for (int j = ny - 1; j >= 0; j--) {
-		for (int i = 0; i < nx; ++i) {
-			raytracedImage << static_cast<int>(image[3 * (j * nx + i) + 0]) << " ";
-			raytracedImage << static_cast<int>(image[3 * (j * nx + i) + 1]) << " ";
-			raytracedImage << static_cast<int>(image[3 * (j * nx + i) + 2]) << '\n';
+	for (int j = height - 1; j >= 0; j--) {
+		for (int i = 0; i < width; ++i) {
+			raytracedImage << static_cast<int>(image[3 * (j * width + i) + 0]) << " ";
+			raytracedImage << static_cast<int>(image[3 * (j * width + i) + 1]) << " ";
+			raytracedImage << static_cast<int>(image[3 * (j * width + i) + 2]) << '\n';
 		}
 	}
 	raytracedImage.close();
 }
+
+HitableList ballScene() {
+	using std::make_shared;
+	HitableList scene;
+
+	std::shared_ptr<DiffuseLight> whiteLight = make_shared<DiffuseLight>(make_shared<ConstantTexture>(color::WHITE));
+	auto checker = make_shared<CheckerTexture>(make_shared<ConstantTexture>(rgb(0.2, 0.3, 0.1)), make_shared<ConstantTexture>(rgb(0.9, 0.9, 0.9)));
+	scene.add(make_shared<Sphere>(point(0.0f, -100.5f, -1.0f), 100.0f, make_shared<Lambertian>(checker)));		// ground sphere
+
+	scene.add(make_shared<Sphere>(point(1.0f, 0.0f, -1.0f), 0.5f, make_shared<Metal>(rgb(0.2f, 0.8f, 0.2f), 0.0f)));
+	scene.add(make_shared<Sphere>(point(-2.0f, 1.0f, 1.0f), 1.0f, make_shared<Metal>(rgb(1.0f, 0.2f, 0.7f), 0.0f)));
+	scene.add(make_shared<Sphere>(point(-1.0f, 0.0f, -1.0f), 0.5f, make_shared<Dielectric>(1.5f)));
+	scene.add(make_shared<Sphere>(point(-1.0f, 0.0f, -1.0f), -0.45f,
+		whiteLight));
+	//make_shared<Dielectric>(1.5f)));
+	scene.add(make_shared<Sphere>(point(0.0f, .0f, -1.0f), -0.5f, make_shared<Dielectric>(1.7f)));
+
+	scene.add(make_shared<Triangle>(point(0.0f, 1.0f, -1.0f), point(2.0f, 2.0f, -1.0f), point(2.0f, 3.0f, -1.0f), make_shared<Metal>(rgb(1.0f, 0.2f, 0.7f), 0.0f)));
+	//make_shared<Lambertian>(make_shared<ConstantTexture>(rgb(1.0f, 0.0f, 0.4f)))));
+	scene.add(make_shared<Triangle>(point(-2.0f, 1.0f, -1.0f), point(0.0f, 2.0f, -1.0f), point(0.0f, 3.0f, -1.0f), make_shared<Lambertian>(make_shared<ConstantTexture>(rgb(0.2f, 0.3f, 0.4f)))));
+	return scene;
+}
+
 
 int main() { 
 
@@ -79,12 +115,12 @@ int main() {
 	using namespace mathStuff;
 	Timer timer;
 
-	int nx = 640;			//width
-	int ny = 480;			//height
-	int ns = 100;			//number of samples to take within each pixle. increase for better antialiasing 
+	int width = 640;			// width
+	int height = 480;			// height
+	int spp = 10;				// number of samples per pixel
 
-	std::vector<uint8_t> image(nx * ny * 3); // width * height * 3 RGB channels
-	ImageDisplay display(nx, ny, &image);
+	std::vector<uint8_t> image(width * height * 3); // width * height * 3 RGB channels
+	ImageDisplay display(width, height, &image);
 	auto displayThread = std::thread(&ImageDisplay::startDisplay, &display);
 
 	vec3 lookFrom(3.0, 3.0, 2.0);
@@ -92,52 +128,42 @@ int main() {
 	vec3 vUp(0.0,1.0,0.0);
 	float distToFocus = glm::length(lookFrom - lookAt);
 	float aperture = 0.01f;
-	Camera camera(lookFrom, lookAt, vUp, 90, float(nx) / float(ny), aperture, distToFocus);
-
-	HitableList world;
-	auto checker = make_shared<CheckerTexture>(make_shared<ConstantTexture>(rgb(0.2, 0.3, 0.1)), make_shared<ConstantTexture>(rgb(0.9, 0.9, 0.9)));
-	world.add(make_shared<Sphere>(point(0.0f, -100.5f, -1.0f), 100.0f, make_shared<Lambertian>(checker)));		// ground sphere
-
-	world.add(make_shared<Sphere>(point(1.0f, 0.0f, -1.0f), 0.5f, make_shared<Metal>(rgb(0.2f, 0.8f, 0.2f), 0.0f)));
-	world.add(make_shared<Sphere>(point(-2.0f, 1.0f, 1.0f), 1.0f, make_shared<Metal>(rgb(1.0f, 0.2f, 0.7f), 0.0f)));
-	world.add(make_shared<Sphere>(point(-1.0f, 0.0f, -1.0f), 0.5f, make_shared<Dielectric>(1.5f)));
-	world.add(make_shared<Sphere>(point(-1.0f, 0.0f, -1.0f), -0.45f, make_shared<Dielectric>(1.5f)));
-	world.add(make_shared<Sphere>(point(0.0f, .0f, -1.0f), -0.5f, make_shared<Dielectric>(1.7f)));
-
-	world.add(make_shared<Triangle>(point(0.0f, 1.0f, -1.0f), point(2.0f, 2.0f, -1.0f), point(2.0f, 3.0f, -1.0f), make_shared<Lambertian>(make_shared<ConstantTexture>(rgb(1.0f, 0.0f, 0.4f)))));
-	world.add(make_shared<Triangle>(point(-2.0f, 1.0f, -1.0f), point(0.0f, 2.0f, -1.0f), point(0.0f, 3.0f, -1.0f), make_shared<Lambertian>(make_shared<ConstantTexture>(rgb(0.2f, 0.3f, 0.4f)))));
+	Camera camera(lookFrom, lookAt, vUp, 90, float(width) / float(height), aperture, distToFocus);
+	
+	HitableList world = ballScene();
 	BvhNode bvhRoot(world);
 	//BvhNode bvhRoot(randomScene());
 	
 	timer.start("rendering");
 	#pragma omp parallel for collapse(2)
-	for (int j = 0; j < ny; j++) {
-		for (int i = 0; i < nx; i++) {		
-			//std::cout << "Currently on pixel (" << i << ", "<< j << ")";	// slows processing, should not be used
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {		
 			rgb col(0, 0, 0);
-			for (int s = 0; s < ns; s++) {
-				float u = float(i + getRand()) / float(nx);
-				float v = float(j + getRand()) / float(ny);
+			for (int s = 0; s < spp; s++) {
+				float u = float(i + getRand()) / float(width);
+				float v = float(j + getRand()) / float(height);
 				Ray r = camera.getRay(u, v);
 				point p = r.pointAtParameter(2.0);
-				col += ray_color(r, world, 0);
+				col += ray_color(r, color::BLACK, world, MAX_REFLECTS);
 			}
-			col /= float(ns);
-			col = rgb(sqrt(col.r), sqrt(col.g), sqrt(col.b));	// gamma correction : TODO optimize later
-			// get color values between [0,255] TODO use openGL to display in real time
-			image[3 * (j*nx + i) + 0] = static_cast<int>(256 * clamp(col.r, 0.0f, 0.999f));
-			image[3 * (j*nx + i) + 1] = static_cast<int>(256 * clamp(col.g, 0.0f, 0.999f));
-			image[3 * (j*nx + i) + 2] = static_cast<int>(256 * clamp(col.b, 0.0f, 0.999f));
+			col /= float(spp);
+			col = rgb(sqrt(col.r), sqrt(col.g), sqrt(col.b));	// gamma correction
+			image[3 * (j*width + i) + 0] = static_cast<int>(256 * clamp(col.r, 0.0f, 0.999f));
+			image[3 * (j*width + i) + 1] = static_cast<int>(256 * clamp(col.g, 0.0f, 0.999f));
+			image[3 * (j*width + i) + 2] = static_cast<int>(256 * clamp(col.b, 0.0f, 0.999f));
+
 		}
 	}
 	timer.end();
 	timer.start("file writing");
-	saveImage(image, nx, ny, ns);
+	saveImage(image, width, height, spp);
 	timer.end();
-	std::cout << "Close the display window to exit program.\n";
 	displayThread.join();
 	return 0;
 }
+
+
+
 /* TODO
 Read settings from file at runtime
 */
