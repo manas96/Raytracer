@@ -19,7 +19,6 @@ public:
 public:
 	bool OnUserCreate() override
 	{
-		// Called once at the start, so create things here
 		return true;
 	}
 
@@ -32,7 +31,7 @@ public:
 				int g = imageBuffer->at(base + 1);
 				int b = imageBuffer->at(base + 2);
 				// PGE's origin is top left
-				Draw(w - i, h - j, olc::Pixel(r, g, b));
+				Draw( i, h - j, olc::Pixel(r, g, b));
 			}
 		return true;
 	}

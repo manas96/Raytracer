@@ -1,3 +1,4 @@
+#pragma once
 #include "material.h"
 #include "texture.h"
 #include "vec3aliases.h"
