@@ -73,8 +73,8 @@ int main() {
 	using namespace mathStuff;
 	Timer timer;
 
-	int width = 640;			// width
-	int height = 480;			// height
+	int width = 400;			// width
+	int height = 400;			// height
 	int spp = 1;				// number of samples per pixel
 
 	std::vector<uint8_t> image(width * height * 3); // width * height * 3 RGB channels
@@ -111,10 +111,13 @@ int main() {
 		}
 	}
 	timer.end();
+
 	timer.start("file writing");
 	saveImage(image, width, height, spp);
 	timer.end();
+
 	displayThread.join();
+	
 	return 0;
 }
 
@@ -122,10 +125,4 @@ int main() {
 
 /* TODO
 Read settings from file at runtime
-*/
-
-/*
-
-
-
 */

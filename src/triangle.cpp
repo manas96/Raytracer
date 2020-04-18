@@ -29,7 +29,7 @@ bool Triangle::hit(const Ray& r, float tMin, float tMax, hitRecord& rec) const {
     rec.t = t;
     rec.p = vec3(u,v,t);
     rec.materialPtr = material;
-    rec.normal = normalize(cross(v0v1, v0v2));      // TODO use setFaceNormal()
+    rec.setFaceNormal(r, normalize(cross(v0v1, v0v2)));
 
     return true; 
 }
