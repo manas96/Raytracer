@@ -20,3 +20,21 @@ References used :
 
 ### Example output : diffuse, dielectric and metallic materials with triangle primitives
 ![Example output : diffuse, dielectric and metallic materials](https://github.com/manas96/Raytracer/blob/master/demo.jpg)
+
+
+## Building instructions 
+CMake 3.9 is required.
+### Windows:
+
+Visual Studio 2019 is preferred. Older versions should work as well.
+
+Make a directory `build` for the VS solution :
+
+`mkdir build`
+
+Generate VS solution:
+
+`cd build`
+
+`cmake .. -G "Visual Studio 16 2019"`
+

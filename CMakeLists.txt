@@ -3,6 +3,30 @@ cmake_minimum_required(VERSION 3.9)
 project(raytracer)
 
 set( SOURCES 
+    # include files
+    include/display/imagedisplay.h
+    include/aabb.h
+    include/bvh.h
+    include/camera.h
+    include/dielectric.h
+    include/diffuselight.h
+    include/hitable.h
+    include/hitablelist.h
+    include/lambertian.h
+    include/material.h
+    include/metal.h
+    include/ray.h
+    include/scenes.h
+    include/sphere.h
+    include/texture.h
+    include/timer.h
+    include/triangle.h
+    include/utilities.h
+    include/vec3aliases.h
+
+    # adding PGE as source helps if we want to edit the file in Visual Studio
+    libs/pge/olcPixelGameEngine.h
+
     # source code files
     src/aabb.cpp
     src/bvh.cpp
