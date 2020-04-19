@@ -37,6 +37,7 @@ bool Triangle::hit(const Ray& r, float tMin, float tMax, hitRecord& rec) const {
 // TODO verify
 bool Triangle::boundingBox(Aabb& outputBox) const {
     using namespace mathStuff;
+    vec3 offset(0.001f, 0.001f, 0.001f);
     point min(
                 ffmin(v0.x, v1.x, v2.x),
                 ffmin(v0.y, v1.y, v2.y),
@@ -45,7 +46,7 @@ bool Triangle::boundingBox(Aabb& outputBox) const {
                 ffmax(v0.x, v1.x, v2.x),
                 ffmax(v0.y, v1.y, v2.y),
                 ffmax(v0.z, v1.z, v2.z));
-    outputBox = Aabb(min, max);
+    outputBox = Aabb(min - offset, max + offset);
     return true;
 }
 
