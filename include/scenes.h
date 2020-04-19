@@ -27,6 +27,9 @@ namespace scenes {
 			make_shared<Dielectric>(1.5f)));
 		scene.add(make_shared<Sphere>(point(0.0f, .0f, -1.0f), -0.5f, make_shared<Dielectric>(1.7f)));
 
+		scene.add(make_shared<Triangle>(point(-2.0f + 1, 1.0f, -1.0f), point(0.0f + 1, 2.0f, -1.0f), point(0.0f + 1, 3.0f, -1.0f),
+			make_shared<Lambertian>(make_shared<ConstantTexture>(color::GREEN))));
+
 		scene.add(make_shared<Triangle>(point(0.0f, 1.0f, -1.0f), point(2.0f, 2.0f, -1.0f), point(2.0f, 3.0f, -1.0f),
 			//make_shared<Metal>(rgb(1.0f, 0.2f, 0.7f), 0.0f)));
 		make_shared<Lambertian>(make_shared<ConstantTexture>(rgb(1.0f, 0.0f, 0.4f)))));

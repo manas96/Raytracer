@@ -18,11 +18,11 @@ bool Triangle::hit(const Ray& r, float tMin, float tMax, hitRecord& rec) const {
     float invDet = 1 / det; 
     vec3 tvec = r.origin() - v0; 
     float u = dot(tvec, pvec) * invDet; 
-    if (u < 0 || u > 1) return false; 
+    if (u < 0.0f || u > 1.0f) return false; 
  
     vec3 qvec = cross(tvec, v0v1);
     float v = dot(r.direction(), qvec) * invDet;
-    if (v < 0 || u + v > 1) return false; 
+    if (v < 0.0f || u + v > 1.0f) return false; 
  
     float t = dot(v0v2, qvec) * invDet;
 
