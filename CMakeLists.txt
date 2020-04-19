@@ -27,6 +27,9 @@ set( SOURCES
     # adding PGE as source helps if we want to edit the file in Visual Studio
     libs/pge/olcPixelGameEngine.h
 
+    # same as above
+    libs/tiny_obj/tiny_obj_loader.h
+
     # source code files
     src/aabb.cpp
     src/bvh.cpp
@@ -41,7 +44,7 @@ set( SOURCES
     src/main.cpp
 )
 add_executable(raytracer_bin ${SOURCES})
-target_include_directories(raytracer_bin PUBLIC "libs/glm" "include" "libs/pge")
+target_include_directories(raytracer_bin PUBLIC "libs/glm" "include" "libs/pge" "libs/tiny_obj")
 
 find_package(OpenMP)
 if(OpenMP_CXX_FOUND)
