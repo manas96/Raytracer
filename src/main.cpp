@@ -73,15 +73,16 @@ int main() {
 	using namespace mathStuff;
 	Timer timer;
 
-	int width = 400;			// width
-	int height = 400;			// height
-	int spp = 1;				// number of samples per pixel
+	int width = 640;			// width
+	int height = 480;			// height
+	int spp = 10;				// number of samples per pixel
 
 	std::vector<uint8_t> image(width * height * 3); // width * height * 3 RGB channels
 	ImageDisplay display(width, height, &image);
 	auto displayThread = std::thread(&ImageDisplay::startDisplay, &display);
 
-	vec3 lookFrom(3.0, 3.0, 2.0);
+	//vec3 lookFrom(3.0, 3.0, 40.0);
+	vec3 lookFrom(3.0f, 3.0f, 2.0f);
 	vec3 lookAt(0.0, 0.0, -1.0);
 	vec3 vUp(0.0,1.0,0.0);
 	float distToFocus = 100.0f;
@@ -89,6 +90,11 @@ int main() {
 	Camera camera(lookFrom, lookAt, vUp, 90, float(width) / float(height), aperture, distToFocus);
 	
 	HitableList world = scenes::exampleScene();
+	//HitableList world = scenes::fromObj("C:\\Users\\manas\\Downloads\\CornellBox\\CornellBox-Empty-CO.obj");
+	//HitableList world;
+	//world.append(scenes::fromObj("scenes\\teapot_hires.obj"));
+	
+	
 	BvhNode bvhRoot(world);
 	
 	timer.start("rendering");
@@ -100,7 +106,7 @@ int main() {
 				float u = float(i + getRand()) / float(width);
 				float v = float(j + getRand()) / float(height);
 				Ray r = camera.getRay(u, v);
-				col += ray_color(r, color::WHITE, world, MAX_REFLECTS);
+				col += ray_color(r, color::LIGHTBLUE, bvhRoot, MAX_REFLECTS);
 			}
 			col /= float(spp);
 			col = rgb(sqrt(col.r), sqrt(col.g), sqrt(col.b));	// gamma correction

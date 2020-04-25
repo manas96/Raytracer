@@ -14,6 +14,7 @@ public :
 
 	void clear() { objects.clear(); }
 	void add(std::shared_ptr<Hitable> object) { objects.push_back(object); }
+	void append(HitableList list) { objects.insert(objects.end(), list.objects.begin(), list.objects.end()); }
 
 	bool hit(const Ray& r, float tMin, float tMax, hitRecord& record) const;
 

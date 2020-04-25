@@ -23,6 +23,7 @@ set( SOURCES
     include/triangle.h
     include/utilities.h
     include/vec3aliases.h
+    include/mesh.h
 
     # adding PGE as source helps if we want to edit the file in Visual Studio
     libs/pge/olcPixelGameEngine.h
@@ -41,6 +42,7 @@ set( SOURCES
     src/sphere.cpp
     src/triangle.cpp
     src/utilities.cpp
+    src/mesh.cpp
     src/main.cpp
 )
 add_executable(raytracer_bin ${SOURCES})
