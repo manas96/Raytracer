@@ -75,24 +75,23 @@ int main() {
 
 	int width = 640;			// width
 	int height = 480;			// height
-	int spp = 10;				// number of samples per pixel
+	int spp = 1;				// number of samples per pixel
 
 	std::vector<uint8_t> image(width * height * 3); // width * height * 3 RGB channels
 	ImageDisplay display(width, height, &image);
 	auto displayThread = std::thread(&ImageDisplay::startDisplay, &display);
 
-	//vec3 lookFrom(3.0, 3.0, 40.0);
-	vec3 lookFrom(3.0f, 3.0f, 2.0f);
+	vec3 lookFrom(0.0, 2.0, 7.0);
+	//vec3 lookFrom(3.0f, 3.0f, 2.0f);
 	vec3 lookAt(0.0, 0.0, -1.0);
 	vec3 vUp(0.0,1.0,0.0);
 	float distToFocus = 100.0f;
 	float aperture = 0.0f;
 	Camera camera(lookFrom, lookAt, vUp, 90, float(width) / float(height), aperture, distToFocus);
 	
-	HitableList world = scenes::exampleScene();
-	//HitableList world = scenes::fromObj("C:\\Users\\manas\\Downloads\\CornellBox\\CornellBox-Empty-CO.obj");
-	//HitableList world;
-	//world.append(scenes::fromObj("scenes\\teapot_hires.obj"));
+	//HitableList world = scenes::exampleScene();
+	HitableList world = scenes::fromObj("scenes//cornell-box.obj");
+	//HitableList world = scenes::fromObj("scenes\\teapot_hires.obj");
 	
 	
 	BvhNode bvhRoot(world);

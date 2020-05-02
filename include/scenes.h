@@ -74,42 +74,50 @@ namespace scenes {
 		std::shared_ptr<Dielectric> glass = make_shared<Dielectric>(1.6f);
 
 
-		scene.add(make_shared<Sphere>(point(0.0f, -100.5f, -1.0f), 100.0f,
-			fadedMetal));		// ground sphere
+		//scene.add(make_shared<Sphere>(point(0.0f, -100.5f, -1.0f), 100.0f,
+			//fadedMetal));		// ground sphere
 
-		std::vector<point> points;
-		std::vector<point> normals;
-		for (const auto& shape : shapes) {
-			for (const auto& index : shape.mesh.indices) {
-				// vertex coords
-				float vx = attrib.vertices[3 * index.vertex_index + 0];
-				float vy = attrib.vertices[3 * index.vertex_index + 1];
-				float vz = attrib.vertices[3 * index.vertex_index + 2];
-				points.push_back(point(vx, vy, vz));
+		// Loop over shapes
+		for (size_t s = 0; s < shapes.size(); s++) {
+			// Loop over faces/polygons(triangles in this case)
+			size_t indexOffset = 0;
 
-				float nx = attrib.normals[3 * index.normal_index + 0];
-				float ny = attrib.normals[3 * index.normal_index + 1];
-				float nz = attrib.normals[3 * index.normal_index + 2];
-				normals.push_back(point(nx, ny, nz));
-			}
-			int verticesPerFace = shape.mesh.num_face_vertices[0];		// this will be same for all faces since faces are triangulated
-			for (int i = 0; i < shape.mesh.indices.size() - verticesPerFace; i = i + verticesPerFace) {
+			for (size_t face = 0; face < shapes[s].mesh.num_face_vertices.size(); face++) {
+				int fv = shapes[s].mesh.num_face_vertices[face];
+				std::vector<point> points;
+				std::vector<point> normals;
 
-				// calculate face normal from vertex normals
-				vec3 v0 = points[i];
-				vec3 v1 = points[i + 1];
-				vec3 v2 = points[i + 2];
-				
-				
+				// Loop over vertices in the face
+				for (size_t v = 0; v < fv; v++) {
+					tinyobj::index_t idx = shapes[s].mesh.indices[indexOffset + v];
+
+					float vx = attrib.vertices[3 * idx.vertex_index + 0];
+					float vy = attrib.vertices[3 * idx.vertex_index + 1];
+					float vz = attrib.vertices[3 * idx.vertex_index + 2];
+					points.push_back(point(vx, vy, vz));
+
+					float nx = attrib.normals[3 * idx.normal_index + 0];
+					float ny = attrib.normals[3 * idx.normal_index + 1];
+					float nz = attrib.normals[3 * idx.normal_index + 2];
+					normals.push_back(point(nx, ny, nz));
+
+				}
+				point v0 = points[0];
+				point v1 = points[1];
+				point v2 = points[2];
+
 				vec3 v0v1 = v1 - v0;
 				vec3 v0v2 = v2 - v0;
 				vec3 faceNormal = glm::normalize(glm::cross(v0v1, v0v2));
 
-				scene.add(make_shared<Triangle>(v0, v1, v2, glass, faceNormal));
+				std::shared_ptr<Metal> randomMetal = make_shared<Metal>(mathStuff::randomVec3(), 0.0f);
+				scene.add(make_shared<Triangle>(v0, v1, v2, randomMetal, faceNormal));
+
+				points.clear();
+				normals.clear();
+				indexOffset += fv;
 			}
 		}
-
-
 		return scene;
 	}
 
