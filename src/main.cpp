@@ -75,27 +75,33 @@ int main() {
 
 	int width = 640;			// width
 	int height = 480;			// height
-	int spp = 1;				// number of samples per pixel
+	int spp = 1000;				// number of samples per pixel
 
 	std::vector<uint8_t> image(width * height * 3); // width * height * 3 RGB channels
 	ImageDisplay display(width, height, &image);
 	auto displayThread = std::thread(&ImageDisplay::startDisplay, &display);
 
-	vec3 lookFrom(0.0, 2.0, 7.0);
-	//vec3 lookFrom(3.0f, 3.0f, 2.0f);
-	vec3 lookAt(0.0, 0.0, -1.0);
+	//vec3 lookFrom(0.0, 2.0, 1.0); // cornell
+	vec3 lookFrom(3.0f, 3.0f, 4.0f);
+	vec3 lookAt(0.0, 1.9, -1.0);
 	vec3 vUp(0.0,1.0,0.0);
 	float distToFocus = 100.0f;
 	float aperture = 0.0f;
 	Camera camera(lookFrom, lookAt, vUp, 90, float(width) / float(height), aperture, distToFocus);
 	
-	//HitableList world = scenes::exampleScene();
-	HitableList world = scenes::fromObj("scenes//cornell-box.obj");
-	//HitableList world = scenes::fromObj("scenes\\teapot_hires.obj");
+	timer.start("geometry loading");
 	
+		//HitableList world = scenes::exampleScene();
+		//HitableList world = scenes::fromObj("scenes/cornell-empty.obj");
+		HitableList world = scenes::fromObj("scenes/teapot_hires.obj");
+		//HitableList world = scenes::fromObj("scenes\\conference.obj");
 	
+	timer.end();
+
+	timer.start("BVH construction");
 	BvhNode bvhRoot(world);
-	
+	timer.end();
+
 	timer.start("rendering");
 	#pragma omp parallel for collapse(2)
 	for (int j = 0; j < height; j++) {
@@ -105,7 +111,7 @@ int main() {
 				float u = float(i + getRand()) / float(width);
 				float v = float(j + getRand()) / float(height);
 				Ray r = camera.getRay(u, v);
-				col += ray_color(r, color::LIGHTBLUE, bvhRoot, MAX_REFLECTS);
+				col += ray_color(r, rgb(0.4,0.4,0.4), bvhRoot, MAX_REFLECTS);
 			}
 			col /= float(spp);
 			col = rgb(sqrt(col.r), sqrt(col.g), sqrt(col.b));	// gamma correction
@@ -122,7 +128,8 @@ int main() {
 	timer.end();
 
 	displayThread.join();
-	
+	std::cout << "Done.\n";
+
 	return 0;
 }
 

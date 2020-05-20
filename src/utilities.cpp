@@ -66,6 +66,14 @@ point mathStuff::randomInUnitSphere() {
 	}	
 }
 
+point mathStuff::randomInHemisphere(const vec3& normal) {
+	point inUnitSphere = randomInUnitSphere();
+	if (glm::dot(inUnitSphere, normal) > 0.0f)
+		return inUnitSphere;
+	else return -inUnitSphere;
+}
+
+
 // see wikipedia for equation explanation
 vec3 mathStuff::refract(const vec3& incoming, const vec3& normal, float etai_over_etat) {
 	using namespace glm;

@@ -24,11 +24,11 @@ namespace scenes {
 
 		scene.add(make_shared<Sphere>(point(0.0f, -100.5f, -1.0f), 100.0f, make_shared<Lambertian>(checker)));		// ground sphere
 
-		scene.add(make_shared<Sphere>(point(1.0f, 0.0f, -1.0f), 0.5f, make_shared<Metal>(rgb(0.2f, 0.8f, 0.2f), 0.0f)));
+		scene.add(make_shared<Sphere>(point(1.0f, 0.0f, -1.0f), 0.5f, make_shared<Metal>(make_shared<ConstantTexture>(rgb(0.2f, 0.8f, 0.2f)), 0.0f)));
 
 		scene.add(make_shared<Sphere>(point(-2.0f, 1.0f, 1.0f), 1.0f,
 			//whiteLight));
-		make_shared<Metal>(rgb(1.0f, 0.2f, 0.7f), 0.0f)));
+		make_shared<Metal>(make_shared<ConstantTexture>(rgb(1.0f, 0.2f, 0.7f)), 0.0f)));
 
 		scene.add(make_shared<Sphere>(point(-1.0f, 0.0f, -1.0f), 0.5f, make_shared<Dielectric>(1.5f)));
 
@@ -39,15 +39,15 @@ namespace scenes {
 		//scene.add(make_shared<Sphere>(point(0.0f, .0f, -1.0f), -0.5f, make_shared<Dielectric>(1.7f)));
 
 		scene.add(make_shared<Triangle>(point(-2.0f + 1, 1.0f, -1.0f), point(0.0f + 1, 2.0f, -1.0f), point(0.0f + 1, 3.0f, -1.0f),
-			make_shared<Lambertian>(make_shared<ConstantTexture>(color::GREEN))));
+			make_shared<Metal>(make_shared<ConstantTexture>(rgb(1.0f, 0.2f, 0.7f)), 0.0f)));
 
 		scene.add(make_shared<Triangle>(point(0.0f, 1.0f, -1.0f), point(2.0f, 2.0f, -1.0f), point(2.0f, 3.0f, -1.0f),
-			//make_shared<Metal>(rgb(1.0f, 0.2f, 0.7f), 0.0f)));
-		make_shared<Lambertian>(make_shared<ConstantTexture>(rgb(1.0f, 0.0f, 0.4f)))));
+			make_shared<Metal>(make_shared<ConstantTexture>(rgb(color::LIGHTBLUE)), 0.0f)));
+		//make_shared<Lambertian>(make_shared<ConstantTexture>(rgb(1.0f, 0.0f, 0.4f)))));
 
 		scene.add(make_shared<Triangle>(point(-2.0f, 1.0f, -1.0f), point(0.0f, 2.0f, -1.0f), point(0.0f, 3.0f, -1.0f),
-		//	make_shared<Metal>(color::YELLOW, 0.0f)));
-		make_shared<Lambertian>(make_shared<ConstantTexture>(color::YELLOW))));
+			make_shared<Metal>(make_shared<ConstantTexture>(color::YELLOW), 0.0f)));
+		//make_shared<Lambertian>(make_shared<ConstantTexture>(color::YELLOW))));
 
 		return scene;
 	}
@@ -61,21 +61,26 @@ namespace scenes {
 		std::string warn;
 		std::string err;
 
-		std::shared_ptr<DiffuseLight> whiteLight = make_shared<DiffuseLight>(make_shared<ConstantTexture>(rgb(1000.0f, 1000.0f, 1000.0f)));
+		std::shared_ptr<DiffuseLight> whiteLight = make_shared<DiffuseLight>(make_shared<ConstantTexture>(rgb(40.0f, 40.0f, 40.0f)));
+		auto checker = make_shared<CheckerTexture>(make_shared<ConstantTexture>(rgb(0.2, 0.3, 0.6)), make_shared<ConstantTexture>(rgb(0.9, 0.9, 0.9)));
+
+
+		scene.add(make_shared<Sphere>(point(0.0f, -100.5f, -1.0f), 100.0f,
+			make_shared<Lambertian>(checker)));		// ground sphere
+			//make_shared<Metal>(make_shared<ConstantTexture>(color::YELLOW), 0.0f)));
+
+		scene.add(make_shared<Sphere>(point(-1.7f, 5.2f, 4.6f), 1.0f,
+			//make_shared<Metal>(make_shared<ConstantTexture>(color::RED), 0.0f)));	
+			whiteLight));
+		std::shared_ptr<Lambertian> customDiffuse = make_shared<Lambertian>(make_shared<ConstantTexture>(color::LIGHTBLUE));
+		std::shared_ptr<Metal> metal = make_shared<Metal>(make_shared<ConstantTexture>(color::GREEN), 0.0f);
+		std::shared_ptr<Dielectric> dielectric = make_shared<Dielectric>(1.5f);
+		std::shared_ptr<Material> material;
 
 		if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, file.c_str(), "scenes\\")) {
 			throw std::runtime_error(warn + err);
 		}
 		std::cout << warn << '\n' << err << '\n';
-
-		std::shared_ptr<Material> material = make_shared<Lambertian>(make_shared<ConstantTexture>(color::YELLOW));		
-		std::shared_ptr<Metal> fadedMetal = make_shared<Metal>(rgb(0.5f, 0.4f, 0.2f), 0.0f);
-		std::shared_ptr<Metal> yellowMetal = make_shared<Metal>(color::YELLOW, 0.0f);
-		std::shared_ptr<Dielectric> glass = make_shared<Dielectric>(1.6f);
-
-
-		//scene.add(make_shared<Sphere>(point(0.0f, -100.5f, -1.0f), 100.0f,
-			//fadedMetal));		// ground sphere
 
 		// Loop over shapes
 		for (size_t s = 0; s < shapes.size(); s++) {
@@ -95,12 +100,6 @@ namespace scenes {
 					float vy = attrib.vertices[3 * idx.vertex_index + 1];
 					float vz = attrib.vertices[3 * idx.vertex_index + 2];
 					points.push_back(point(vx, vy, vz));
-
-					float nx = attrib.normals[3 * idx.normal_index + 0];
-					float ny = attrib.normals[3 * idx.normal_index + 1];
-					float nz = attrib.normals[3 * idx.normal_index + 2];
-					normals.push_back(point(nx, ny, nz));
-
 				}
 				point v0 = points[0];
 				point v1 = points[1];
@@ -110,8 +109,24 @@ namespace scenes {
 				vec3 v0v2 = v2 - v0;
 				vec3 faceNormal = glm::normalize(glm::cross(v0v1, v0v2));
 
-				std::shared_ptr<Metal> randomMetal = make_shared<Metal>(mathStuff::randomVec3(), 0.0f);
-				scene.add(make_shared<Triangle>(v0, v1, v2, randomMetal, faceNormal));
+
+				int materialId = shapes[s].mesh.material_ids[face];
+				if (materialId != -1) {
+					tinyobj::material_t tinyMaterial = materials[materialId];
+
+					rgb diffuseColor(tinyMaterial.diffuse[0], tinyMaterial.diffuse[1], tinyMaterial.diffuse[2]);
+					rgb ambientColor(tinyMaterial.ambient[0], tinyMaterial.ambient[1], tinyMaterial.ambient[2]);
+					material = make_shared<Lambertian>(make_shared<ConstantTexture>(diffuseColor));
+
+					if (shapes[s].name.compare("area_light") == 0) material = whiteLight;
+					if (shapes[s].name.compare("teapot") == 0) material = metal;
+					if (shapes[s].name.compare("floor") == 0) material = metal;//make_shared<Metal>(make_shared<ConstantTexture>(color::YELLOW), 0.0f);
+				}
+				else {
+					material = metal;
+						//make_shared<Dielectric>(1.5f);
+				}
+				scene.add(make_shared<Triangle>(v0, v1, v2, material, faceNormal));
 
 				points.clear();
 				normals.clear();
@@ -148,7 +163,7 @@ namespace scenes {
 						// metal
 						vec3 albedo = randomVec3(.5f, 1.0f);
 						float fuzz = getRand(0.0f, 0.5f);
-						scene.add(make_shared<Sphere>(center, 0.2f, make_shared<Metal>(albedo, fuzz)));
+						scene.add(make_shared<Sphere>(center, 0.2f, make_shared<Metal>(make_shared<ConstantTexture>(albedo), fuzz)));
 						//world.add(make_shared<Triangle>(center + randomVec3(), center + randomVec3(), center + randomVec3(), make_shared<Metal>(albedo, fuzz)));
 					}
 					else {
@@ -162,7 +177,7 @@ namespace scenes {
 		scene.add(make_shared<Sphere>(vec3(0.0f, 1.0f, 0.0f), 1.0f, make_shared<Dielectric>(1.5f)));
 		scene.add(make_shared<Sphere>(vec3(-4.0f, 1.0f, 0.0f), 1.0f, make_shared<Lambertian>(make_shared<ConstantTexture>(rgb(0.4f, 0.2f, 0.1f)))));
 
-		scene.add(make_shared<Sphere>(vec3(4.0f, 1.0f, 0.0f), 1.0f, make_shared<Metal>(vec3(0.7f, 0.6f, 0.5f), 0.0f)));
+		scene.add(make_shared<Sphere>(vec3(4.0f, 1.0f, 0.0f), 1.0f, make_shared<Metal>(make_shared<ConstantTexture>(vec3(0.7f, 0.6f, 0.5f)), 0.0f)));
 
 		return scene;
 	}

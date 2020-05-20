@@ -17,6 +17,7 @@ namespace color {
 }
 
 
+
 namespace mathStuff {
 
 	extern std::random_device randDevice;
@@ -61,6 +62,8 @@ namespace mathStuff {
 
 	// returns a random point in a unit sphere
 	point randomInUnitSphere();
+
+	point randomInHemisphere(const vec3& normal);
 
 	vec3 randomUnitVector();
 
