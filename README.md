@@ -45,7 +45,7 @@ The red triangle is blurry because of a narrow depth of field.
 ![Glass teapot](example_output/teapot_demo.jpg)
 ![Metallic teapot](example_output/teapot_metallic.jpg)
 
-There are a few visual artifacts in these images, especially with the teapot normals. However, it does demonstrate geometry mesh loading.
+There are a few visual artifacts in these images, especially with the teapot normals. However, they do demonstrate geometry mesh loading.
 
 ## Building instructions 
 CMake 3.9 is required.
