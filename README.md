@@ -2,6 +2,8 @@
 
 A (backwards) raytracer I wrote for learning. 
 
+![Glass teapot with metallic spheres](example_output/teapot_glass.jpg)
+
 - Using [GLM](https://glm.g-truc.net/) for vector math.
 - Using CMake for building and portability.
 - Using OpenMP for parallelization.
@@ -29,24 +31,18 @@ References used :
 - OBJ geometry loading
 - (Naive) MTL file loading
 
-## Example output:
-
-### Utah teapot:
-![Glass teapot with metallic spheres](example_output/teapot_glass.jpg)
+## More example output:
 
 ![Glass teapot](example_output/teapot_demo.jpg)
 
 There are a few visual artifacts in these images, especially with the teapot normals. However, they do demonstrate geometry mesh loading.
 
-### Real time display
 ![Real time display](example_output/demo.gif)
 
 This demonstrates that the current parallelization strategy is not ideal. The top thread finishes its work quickly(since there are no objects to intersect near the sky) and then does nothing, wasting compute. A better solution would be to have a worker-assigner model, where a taskmaster assigns free worker thread an area of the scene to render. As soon as a worker is finished, it indicates this to the taskmaster who can then assign more work.
 
-### Sphere and triangle primitives (metallic and dielectric):
 ![Sphere and triangle primitives](example_output/demo2.jpg)
 
-### Sphere and triangle primitives (diffuse and dielectric):
 ![Spheres and triangles](example_output/demo.jpg)
 The red triangle is blurry because of a narrow depth of field.
 
