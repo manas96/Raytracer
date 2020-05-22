@@ -69,9 +69,20 @@ namespace scenes {
 			make_shared<Lambertian>(checker)));		// ground sphere
 			//make_shared<Metal>(make_shared<ConstantTexture>(color::YELLOW), 0.0f)));
 
-		scene.add(make_shared<Sphere>(point(-1.7f, 5.2f, 4.6f), 1.0f,
+		scene.add(make_shared<Sphere>(point(-2.3f, 5.2f, 3.6f), 1.0f,
 			//make_shared<Metal>(make_shared<ConstantTexture>(color::RED), 0.0f)));	
 			whiteLight));
+
+		scene.add(make_shared<Sphere>(point(-4.7f + 2.0f, 0.6f, 1.6f), 0.5f,
+			make_shared<Metal>(make_shared<ConstantTexture>(color::RED), 0.0f)));	
+			
+		scene.add(make_shared<Sphere>(point(-4.7f + 5.0f, 0.6f - 0.6f, 1.6f), 0.5f,
+			make_shared<Metal>(make_shared<ConstantTexture>(color::YELLOW), 0.0f)));
+
+		scene.add(make_shared<Sphere>(point(-4.7f + 7.0f, 0.6f, 1.6f), 0.5f,
+			make_shared<Metal>(make_shared<ConstantTexture>(color::GREEN), 0.0f)));
+
+
 		std::shared_ptr<Lambertian> customDiffuse = make_shared<Lambertian>(make_shared<ConstantTexture>(color::LIGHTBLUE));
 		std::shared_ptr<Metal> metal = make_shared<Metal>(make_shared<ConstantTexture>(color::GREEN), 0.0f);
 		std::shared_ptr<Dielectric> dielectric = make_shared<Dielectric>(1.5f);
@@ -123,8 +134,8 @@ namespace scenes {
 					if (shapes[s].name.compare("floor") == 0) material = metal;//make_shared<Metal>(make_shared<ConstantTexture>(color::YELLOW), 0.0f);
 				}
 				else {
-					material = metal;
-						//make_shared<Dielectric>(1.5f);
+					material = //metal;
+						make_shared<Dielectric>(5.5f);
 				}
 				scene.add(make_shared<Triangle>(v0, v1, v2, material, faceNormal));
 

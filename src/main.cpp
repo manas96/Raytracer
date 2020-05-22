@@ -82,7 +82,7 @@ int main() {
 	auto displayThread = std::thread(&ImageDisplay::startDisplay, &display);
 
 	//vec3 lookFrom(0.0, 2.0, 1.0); // cornell
-	vec3 lookFrom(3.0f, 3.0f, 4.0f);
+	vec3 lookFrom(1.0f, 3.0f, 4.0f);
 	vec3 lookAt(0.0, 1.9, -1.0);
 	vec3 vUp(0.0,1.0,0.0);
 	float distToFocus = 100.0f;
@@ -93,7 +93,8 @@ int main() {
 	
 		//HitableList world = scenes::exampleScene();
 		//HitableList world = scenes::fromObj("scenes/cornell-empty.obj");
-		HitableList world = scenes::fromObj("scenes/teapot_hires.obj");
+		HitableList world = scenes::fromObj("../scenes/teapot_hires.obj");
+		//HitableList world = scenes::fromObj("../scenes/dragon.obj");
 		//HitableList world = scenes::fromObj("scenes\\conference.obj");
 	
 	timer.end();
