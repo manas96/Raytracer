@@ -103,7 +103,7 @@ namespace scenes {
 				std::vector<point> points;
 				std::vector<point> normals;
 
-				// Loop over vertices in the face
+				// Loop over vertices in the face. fv will almost always be 3 as triangle primitives are being used.
 				for (size_t v = 0; v < fv; v++) {
 					tinyobj::index_t idx = shapes[s].mesh.indices[indexOffset + v];
 
@@ -111,15 +111,25 @@ namespace scenes {
 					float vy = attrib.vertices[3 * idx.vertex_index + 1];
 					float vz = attrib.vertices[3 * idx.vertex_index + 2];
 					points.push_back(point(vx, vy, vz));
+
+					float nx = attrib.normals[3 * idx.normal_index + 0];
+					float ny = attrib.normals[3 * idx.normal_index + 1];
+					float nz = attrib.normals[3 * idx.normal_index + 2];
+					normals.push_back(vec3(nx, ny, nz));
 				}
+				// Get the 3 vertices of triangle.
 				point v0 = points[0];
 				point v1 = points[1];
 				point v2 = points[2];
 
+				// Get vertex normals of triangle.
+				vec3 n0 = normals[0];
+				vec3 n1 = normals[1];
+				vec3 n2 = normals[2];
+
 				vec3 v0v1 = v1 - v0;
 				vec3 v0v2 = v2 - v0;
 				vec3 faceNormal = glm::normalize(glm::cross(v0v1, v0v2));
-
 
 				int materialId = shapes[s].mesh.material_ids[face];
 				if (materialId != -1) {
@@ -130,14 +140,13 @@ namespace scenes {
 					material = make_shared<Lambertian>(make_shared<ConstantTexture>(diffuseColor));
 
 					if (shapes[s].name.compare("area_light") == 0) material = whiteLight;
-					if (shapes[s].name.compare("teapot") == 0) material = metal;
 					if (shapes[s].name.compare("floor") == 0) material = metal;//make_shared<Metal>(make_shared<ConstantTexture>(color::YELLOW), 0.0f);
 				}
 				else {
-					material = //metal;
-						make_shared<Dielectric>(5.5f);
+					material = metal;
+						//make_shared<Dielectric>(5.5f);
 				}
-				scene.add(make_shared<Triangle>(v0, v1, v2, material, faceNormal));
+				scene.add(make_shared<Triangle>(v0, v1, v2, material, n0, n1, n2));
 
 				points.clear();
 				normals.clear();

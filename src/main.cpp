@@ -75,7 +75,7 @@ int main() {
 
 	int width = 640;			// width
 	int height = 480;			// height
-	int spp = 1000;				// number of samples per pixel
+	int spp = 5;				// number of samples per pixel
 
 	std::vector<uint8_t> image(width * height * 3); // width * height * 3 RGB channels
 	ImageDisplay display(width, height, &image);

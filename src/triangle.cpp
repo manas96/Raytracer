@@ -30,10 +30,8 @@ bool Triangle::hit(const Ray& r, float tMin, float tMax, hitRecord& rec) const {
     rec.p = vec3(u,v,t);
     rec.materialPtr = material;
 
-    if (this->normal == vec3(0, 0, 0))
-        rec.setFaceNormal(r, normalize(cross(v0v1, v0v2)));
-    else
-        rec.normal = this->normal;
+    // Get the normal at the hit point by interpolating from the vertex normals.
+    rec.normal = (1.0f - u - v) * n0 + u * n1 + v * n2;
 
     return true; 
 }
