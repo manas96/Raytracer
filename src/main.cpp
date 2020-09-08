@@ -73,8 +73,8 @@ int main() {
 	using namespace mathStuff;
 	Timer timer;
 
-	int width = 640;			// width
-	int height = 480;			// height
+	int width = 100;			// width
+	int height = 100;			// height
 	int spp = 5;				// number of samples per pixel
 
 	std::vector<uint8_t> image(width * height * 3); // width * height * 3 RGB channels
