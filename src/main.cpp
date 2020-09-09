@@ -54,7 +54,7 @@ void saveImage(std::vector<uint8_t> image, int width, int height, int spp) {
 	std::ostringstream file;
 	file << width << " x " << height << "_spp_" << spp << "_reflects_" << MAX_REFLECTS << ".ppm";
 	std::cout << "Creating output file : " << file.str() << '\n';
-	raytracedImage.open(file.str());
+	raytracedImage.open("Raytracer/" + file.str());
 	raytracedImage << "P3\n" << width << " " << height << "\n255\n";
 
 	for (int j = height - 1; j >= 0; j--) {

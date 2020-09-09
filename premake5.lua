@@ -14,7 +14,8 @@ project "Raytracer"
     -- Makes sure all following paths are relative to Raytracer
     kind "ConsoleApp"
     language "C++"
-
+    
+    objdir("Raytracer/obj")
     targetdir("Raytracer/bin")
 
     files
