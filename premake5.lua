@@ -27,7 +27,7 @@ project "Raytracer"
     includedirs
     {
         "libs/**",
-        "include/"
+        "src/include/"
     }
 
     filter "system:windows"
