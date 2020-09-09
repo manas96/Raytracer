@@ -5,6 +5,8 @@
 
 outputCheckpoints/*
 out/*
+Raytracer/*
+*.vcxproj
 
 # User-specific files
 *.rsuser

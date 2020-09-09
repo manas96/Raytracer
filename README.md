@@ -46,18 +46,6 @@ This demonstrates that the current parallelization strategy is not ideal. The to
 ![Spheres and triangles](example_output/demo.jpg)
 The red triangle is blurry because of a narrow depth of field.
 
-## Building instructions 
-CMake 3.9 is required.
-### Windows:
+### Build instructions for Windows:
 
-Visual Studio 2019 is preferred. Older versions should work as well.
-
-Make a directory `build` for the VS solution :
-
-`mkdir build`
-
-Generate VS solution:
-
-`cd build`
-
-`cmake .. -G "Visual Studio 16 2019"`
+`./premake5.exe vs2019`

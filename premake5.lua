@@ -12,7 +12,6 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 project "Raytracer"
     -- Makes sure all following paths are relative to Raytracer
-    location "Raytracer"
     kind "ConsoleApp"
     language "C++"
 
