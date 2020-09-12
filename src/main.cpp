@@ -71,7 +71,6 @@ int main() {
 
 	using std::make_shared;
 	using namespace mathStuff;
-	Timer timer;
 
 	int width = 100;			// width
 	int height = 100;			// height

@@ -26,3 +26,5 @@ private:
 	std::chrono::time_point<std::chrono::high_resolution_clock> startTime;
 	std::string task;
 };
+Timer timer;
+
